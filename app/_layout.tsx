@@ -58,7 +58,7 @@ function RootLayoutNav() {
   const trpcClient = trpc.createClient({
     links: [
       httpBatchLink({
-        url: "http://192.168.1.132:3020", // TODO: use enviornment variable
+        url: process.env.EXPO_PUBLIC_SERVER_URL!, // TODO: use enviornment variable
       }),
     ],
   });
