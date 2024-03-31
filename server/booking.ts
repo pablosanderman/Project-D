@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, createCallerFactory } from "../trpc";
 import z from "zod";
 import prisma from "@/utils/prisma";
 
@@ -20,3 +20,6 @@ export const bookingRouter = router({
       });
     }),
 });
+
+// 1. create a caller-function for your router
+export const createCaller = createCallerFactory(bookingRouter);

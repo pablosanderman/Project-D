@@ -10,7 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 
 import { useColorScheme } from "@/components/useColorScheme";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc-utils";
 import { httpBatchLink } from "@trpc/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 

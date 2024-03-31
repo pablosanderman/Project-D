@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc-utils";
 
 export default function TabOneScreen() {
   return (

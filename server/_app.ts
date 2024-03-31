@@ -3,19 +3,21 @@ import { router } from "../trpc";
 
 import { bookingRouter } from "./booking";
 
-const appRouter = router({
+const AppRouter = router({
   booking: bookingRouter,
 });
 
 // Export type router type signature,
 // NOT the router itself.
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof AppRouter;
 
 const server = createHTTPServer({
-  router: appRouter,
+  router: AppRouter,
 });
 
 server.listen(3020);
+
+// korbin example
 
 // helloWorld: publicProcedure.query(async () => {
 //   const user = await prisma.user.findUnique({
