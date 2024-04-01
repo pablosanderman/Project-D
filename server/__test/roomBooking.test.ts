@@ -15,7 +15,7 @@ test("add booking", async () => {
     status: "UPCOMING",
   };
 
-  const result = caller.create(input);
+  const result = await caller.create(input);
 
   expect(result).toMatchObject(input);
 

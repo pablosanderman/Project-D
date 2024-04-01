@@ -16,13 +16,3 @@ const server = createHTTPServer({
 });
 
 server.listen(3020);
-
-// korbin example
-
-// helloWorld: publicProcedure.query(async () => {
-//   const user = await prisma.user.findUnique({
-//     where: {
-//       id: 1,
-//     },
-//   });
-//   return { text: "Hello " + user?.name };

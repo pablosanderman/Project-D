@@ -8,9 +8,6 @@
     "generate": "prisma generate",
     "test": "jest --watchAll"
   },
-  "jest": {
-    "preset": "jest-expo"
-  },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@prisma/client": "^5.11.0",

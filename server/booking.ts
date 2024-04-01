@@ -11,11 +11,11 @@ export const bookingRouter = router({
         endTime: z.string().datetime(),
         roomId: z.number(),
         status: z.enum(["CANCELLED", "CONFIRMED", "UPCOMING", "ACTIVE"]),
-      })
+      }),
     )
-    .mutation((opts) => {
+    .mutation(async (opts) => {
       const { input } = opts;
-      return prisma.booking.create({
+      return await prisma.booking.create({
         data: input,
       });
     }),
