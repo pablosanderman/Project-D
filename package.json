@@ -6,7 +6,8 @@
     "start": "expo start",
     "server": "tsx watch server",
     "generate": "prisma generate",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",

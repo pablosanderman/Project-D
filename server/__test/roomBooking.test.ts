@@ -17,10 +17,7 @@ test("add booking", async () => {
 
   const result = await caller.create(input);
 
-  expect(result).toMatchObject(input);
+  const bookingInfo = await caller.get(1);
 
-  // const bookings = await prisma.booking.findMany();
-
-  // expect(bookings).toHaveLength(1);
-  // expect(bookings[0]).toMatchObject(input);
+  expect(bookingInfo).toMatchObject(result);
 });
