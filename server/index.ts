@@ -1,16 +1,14 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
-import { publicProcedure, router } from "./trpc";
-import prisma from "@/utils/prisma";
+import { router } from "../trpc";
+
+import { bookingRouter } from "./booking";
+import { userRouter } from "./user";
+import { roomRouter } from "./room";
 
 const appRouter = router({
-  helloWorld: publicProcedure.query(async () => {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: 1,
-      },
-    });
-    return { text: "Hello " + user?.name };
-  }),
+  booking: bookingRouter,
+  user: userRouter,
+  room: roomRouter,
 });
 
 // Export type router type signature,
