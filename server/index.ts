@@ -5,7 +5,7 @@ import { bookingRouter } from "./booking";
 import { userRouter } from "./user";
 import { roomRouter } from "./room";
 
-const AppRouter = router({
+const appRouter = router({
   booking: bookingRouter,
   user: userRouter,
   room: roomRouter,
@@ -13,10 +13,10 @@ const AppRouter = router({
 
 // Export type router type signature,
 // NOT the router itself.
-export type AppRouter = typeof AppRouter;
+export type AppRouter = typeof appRouter;
 
 const server = createHTTPServer({
-  router: AppRouter,
+  router: appRouter,
 });
 
 server.listen(3020);
