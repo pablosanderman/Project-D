@@ -5,7 +5,13 @@ import { trpc } from "@/utils/trpc";
 import { CardDemo } from "@/components/CardDemo";
 
 export default function HomeScreen() {
-  const mutation = trpc.booking.create.useMutation();
+  const utils = trpc.useUtils();
+
+  const mutation = trpc.booking.create.useMutation({
+    onSuccess(input) {
+      utils.booking.invalidate();
+    },
+  });
   const createBooking = () => {
     mutation.mutate({
       userId: 1,
