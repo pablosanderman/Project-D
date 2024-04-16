@@ -39,14 +39,13 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      // can hide splash screen here
+      SplashScreen.hideAsync();
     }
   }, [loaded]);
 
   if (!loaded) {
     return null;
   }
-
   return <RootLayoutNav />;
 }
 
