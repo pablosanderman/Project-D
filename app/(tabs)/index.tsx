@@ -3,6 +3,7 @@ import { Button, StyleSheet } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { trpc } from "@/utils/trpc";
 import { CardDemo } from "@/components/CardDemo";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
   const utils = trpc.useUtils();
@@ -29,7 +30,8 @@ export default function HomeScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <CardDemo />
+      <Link href="/booking/">Booking</Link>
+      {/* <CardDemo /> */}
       <Text>Hello World!</Text>
       <Button onPress={createBooking} title="AAA" />
       {mutation.error && (
