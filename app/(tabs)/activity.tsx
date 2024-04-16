@@ -5,10 +5,7 @@ import { trpc } from "@/utils/trpc";
 import { ListItem, XStack, YGroup, Separator } from "tamagui";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({
-    userId: 1,
-    filter: { RoomType: "MEETING" },
-  });
+  const query = trpc.booking.get.useQuery({ userId: 1 });
 
   return (
     <View style={styles.container}>
@@ -28,11 +25,12 @@ export default function ActivityScreen() {
               >
                 <Separator />
                 <Text>Kamer {item.roomId}</Text>
-                <Text>Starts: {formatDate(item.startTime)}</Text>
-                <Text>Ends: {formatDate(item.endTime)}</Text>
-                <Text>Status: {item.status}</Text>
-                <Text>Booked by: {item.user.name}</Text>
-              </ListItem>
+                <Text>Start: {formatDate(item.startTime)}</Text>
+                <Text>Eindigt: {formatDate(item.endTime)}</Text>
+                <Text>Booking status: {item.status}</Text>
+                <Text>User ID: {item.userId}</Text>
+                <View style={styles.separator}></View>
+              </View>
             )}
           />
         </XStack>

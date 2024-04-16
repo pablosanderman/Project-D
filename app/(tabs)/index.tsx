@@ -32,7 +32,7 @@ export default function HomeScreen() {
       <Link href="/booking/">Booking</Link>
       <Button onPress={() => router.push("/booking/")}>Book a room</Button>
       <Text>Hello World!</Text>
-      <Button onPress={createBooking} title="AAA" />
+      <Button onPress={createBooking} title="Create a booking" />
       {mutation.error && (
         <Text>Something went wrong! {mutation.error.message}</Text>
       )}
