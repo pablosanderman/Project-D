@@ -3,13 +3,13 @@ import { Button, FlatList, StyleSheet } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { trpc } from "@/utils/trpc";
 
-export default function TabTwoScreen() {
+export default function ActivityScreen() {
   const query = trpc.booking.get.useQuery({ userId: 1 });
 
   return (
     <View style={styles.container}>
       <Text style={styles.separator}></Text>
-      <Text style={styles.title}>Your booking</Text>
+      <Text style={styles.title}>Activity</Text>
       {query.data && (
         <View>
           <FlatList
@@ -21,6 +21,7 @@ export default function TabTwoScreen() {
                 <Text>Start: {formatDate(item.startTime)}</Text>
                 <Text>Eindigt: {formatDate(item.endTime)}</Text>
                 <Text>Booking status: {item.status}</Text>
+                <Text>User ID: {item.userId}</Text>
                 <View style={styles.separator}></View>
               </View>
             )}
