@@ -14,6 +14,10 @@ import { trpc } from "@/utils/trpc";
 import { httpBatchLink } from "@trpc/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { TamaguiProvider } from "tamagui";
+
+import { tamaguiConfig } from "../tamagui.config";
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -64,15 +68,17 @@ function RootLayoutNav() {
   });
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          </Stack>
-        </QueryClientProvider>
-      </trpc.Provider>
-    </ThemeProvider>
+    <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            </Stack>
+          </QueryClientProvider>
+        </trpc.Provider>
+      </ThemeProvider>
+    </TamaguiProvider>
   );
 }
