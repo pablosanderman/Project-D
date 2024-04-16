@@ -2,6 +2,7 @@ import { Button, StyleSheet } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { trpc } from "@/utils/trpc";
+import { CardDemo } from "@/components/CardDemo";
 
 export default function HomeScreen() {
   const mutation = trpc.booking.create.useMutation();
@@ -22,6 +23,7 @@ export default function HomeScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
+      <CardDemo />
       <Text>Hello World!</Text>
       <Button onPress={createBooking} title="AAA" />
       {mutation.error && (
