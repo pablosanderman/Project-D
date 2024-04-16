@@ -20,14 +20,20 @@ export const bookingRouter = router({
         data: input,
       });
     }),
-  get: publicProcedure.input(z.number()).query(async (opts) => {
-    const { input } = opts;
-    return await prisma.booking.findUnique({
-      where: {
-        id: input,
-      },
-    });
-  }),
+  get: publicProcedure
+    .input(
+      z.object({
+        userId: z.number(),
+      })
+    )
+    .query(async (opts) => {
+      const { userId } = opts.input;
+      return await prisma.booking.findMany({
+        where: {
+          userId: userId,
+        },
+      });
+    }),
   setStatus: publicProcedure
     .input(
       z.object({

@@ -3,7 +3,7 @@ import { Button, StyleSheet } from "react-native";
 import { Text, View } from "@/components/Themed";
 import { trpc } from "@/utils/trpc";
 
-export default function TabOneScreen() {
+export default function HomeScreen() {
   const mutation = trpc.booking.create.useMutation();
   const createBooking = () => {
     mutation.mutate({
