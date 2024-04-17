@@ -14,7 +14,7 @@ import {
 } from "tamagui";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({ userId: 1 });
+  const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
 
 
   return (
@@ -29,7 +29,7 @@ export default function ActivityScreen() {
             </XStack>
           </View>
           <XStack>
-            <YGroup width={"95%"}>
+            <YGroup width={"95%"} maxHeight={"95%"}>
               <FlatList
                 data={query.data}
                 
@@ -44,7 +44,7 @@ export default function ActivityScreen() {
                       <Text>Kamer {item.roomId}</Text>
                       <Text>Start: {formatDate(item.startTime)}</Text>
                       <Text>Eindigt: {formatDate(item.endTime)}</Text>
-                      <Text>Status van de boeking: {status[item.status]}</Text>
+                      <Text>Status van de boeking: {item.status}</Text>
                       <Text>Geboekt door: {item.user.name}</Text>
                     </ListItem>
                   </YGroup.Item>
