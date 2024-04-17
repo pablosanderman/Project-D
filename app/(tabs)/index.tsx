@@ -1,9 +1,8 @@
-import { Button, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { Text, View } from "@/components/Themed";
+import { Text, View, Button } from "tamagui";
 import { trpc } from "@/utils/trpc";
-import { CardDemo } from "@/components/CardDemo";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 export default function HomeScreen() {
   const utils = trpc.useUtils();
@@ -27,11 +26,11 @@ export default function HomeScreen() {
       <Text style={styles.title}>Project D</Text>
       <View
         style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
+        // lightColor="#eee"
+        // darkColor="rgba(255,255,255,0.1)"
       />
       <Link href="/booking/">Booking</Link>
-      {/* <CardDemo /> */}
+      <Button onPress={() => router.push("/booking/")}>Book a room</Button>
       <Text>Hello World!</Text>
       <Button onPress={createBooking} title="AAA" />
       {mutation.error && (

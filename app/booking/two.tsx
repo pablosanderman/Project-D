@@ -1,6 +1,5 @@
-import { Text, View } from "@/components/Themed";
+import { Text, View, Card, Button, XStack } from "tamagui";
 import { useRouter } from "expo-router";
-import { Card, XStack, YStack } from "tamagui";
 
 export default function Two() {
   const options = [
@@ -25,13 +24,21 @@ export default function Two() {
   const router = useRouter();
 
   return (
-    <View>
-      <Text>Book a room</Text>
-      {options.map((option, index) => (
-        <Card onPress={() => router.push(option.href)} key={index}>
-          <Text>{option.name}</Text>
-        </Card>
-      ))}
+    <View marginTop={"$8"} paddingHorizontal={"$2"}>
+      <XStack flexWrap="wrap">
+        {options.map((option, index) => (
+          <View key={index} width={"50%"}>
+            <Button
+              onPress={() => router.push(option.href)}
+              size={"$10"}
+              margin={"$2"}
+              borderRadius={"$4"}
+            >
+              <Text textAlign="center">{option.name}</Text>
+            </Button>
+          </View>
+        ))}
+      </XStack>
     </View>
   );
 }

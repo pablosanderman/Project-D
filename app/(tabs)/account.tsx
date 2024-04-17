@@ -1,7 +1,7 @@
 import { Button, FlatList, StyleSheet } from "react-native";
 
-import { Text, View } from "@/components/Themed";
 import { trpc } from "@/utils/trpc";
+import { Text, View } from "tamagui";
 
 export default function AccountScreen() {
   const user = trpc.user.get.useQuery(1);

@@ -1,7 +1,6 @@
-import { StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
-import { Card, XStack, YStack, Text, View } from "tamagui";
-import { styled } from "@tamagui/core";
+import { Text, View, XStack, Button } from "tamagui";
+import { useNavigation, useRouter } from "expo-router";
+import { useLayoutEffect } from "react";
 
 export default function Booking() {
   const options = [
@@ -21,27 +20,31 @@ export default function Booking() {
 
   const router = useRouter();
 
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Book a room",
+    });
+  }, [navigation]);
+
   return (
-    <View>
-      <Text>Book a room</Text>
-      <Col>
+    <View marginTop={"$8"} paddingHorizontal={"$2"}>
+      <XStack flexWrap="wrap">
         {options.map((option, index) => (
-          <Item onPress={() => router.push(option.href)} key={index}>
-            <Text>{option.name}</Text>
-          </Item>
+          <View key={index} width={"50%"}>
+            <Button
+              onPress={() => router.push(option.href)}
+              size={"$10"}
+              paddingHorizontal={"$0"}
+              margin={"$1"}
+              borderRadius={"$4"}
+            >
+              <Text textAlign="center">{option.name}</Text>
+            </Button>
+          </View>
         ))}
-      </Col>
+      </XStack>
     </View>
   );
 }
-
-const Col = styled(View, {
-  flex: 1,
-  flexDirection: "row",
-  flexWrap: "wrap",
-  alignItems: "flex-start",
-});
-
-const Item = styled(Card, {
-  width: "50%",
-});

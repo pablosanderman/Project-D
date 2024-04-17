@@ -1,6 +1,6 @@
 import { Button, FlatList, StyleSheet } from "react-native";
 
-import { Text, View } from "@/components/Themed";
+import { Text, View } from "tamagui";
 import { trpc } from "@/utils/trpc";
 
 export default function ActivityScreen() {
