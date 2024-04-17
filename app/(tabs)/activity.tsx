@@ -2,31 +2,40 @@ import { Button, FlatList, StyleSheet } from "react-native";
 
 import { Text, View } from "tamagui";
 import { trpc } from "@/utils/trpc";
+import { ListItem, XStack, YGroup, Separator } from "tamagui";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({ userId: 1 });
+  const query = trpc.booking.get.useQuery({
+    userId: 1,
+    filter: { RoomType: "MEETING" },
+  });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.separator}></Text>
-      <Text style={styles.title}>Activity</Text>
       {query.data && (
-        <View>
+        <XStack elevation={1} flex={1} flexWrap="wrap">
           <FlatList
             data={query.data}
             renderItem={({ item }) => (
-              <View style={styles.container}>
-                <Text>Booking no. {item.id}</Text>
+              <ListItem
+                title={"Booking no." + item.id}
+                alignSelf="center"
+                backgroundColor={"grey"}
+                marginBottom={"$2"}
+                width={"95%"}
+                borderRadius={"$2"}
+                borderCurve="continuous"
+              >
+                <Separator />
                 <Text>Kamer {item.roomId}</Text>
-                <Text>Start: {formatDate(item.startTime)}</Text>
-                <Text>Eindigt: {formatDate(item.endTime)}</Text>
-                <Text>Booking status: {item.status}</Text>
-                <Text>User ID: {item.userId}</Text>
-                <View style={styles.separator}></View>
-              </View>
+                <Text>Starts: {formatDate(item.startTime)}</Text>
+                <Text>Ends: {formatDate(item.endTime)}</Text>
+                <Text>Status: {item.status}</Text>
+                <Text>Booked by: {item.user.name}</Text>
+              </ListItem>
             )}
           />
-        </View>
+        </XStack>
       )}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
     </View>
