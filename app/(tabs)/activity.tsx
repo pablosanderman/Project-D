@@ -1,39 +1,58 @@
-import { Button, FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
-import { Text, View } from "tamagui";
 import { trpc } from "@/utils/trpc";
-import { ListItem, XStack, YGroup, Separator } from "tamagui";
+import { useState } from "react";
+import {
+  ListItem,
+  Button,
+  Separator,
+  XStack,
+  YGroup,
+  styled,
+  Text,
+  View,
+} from "tamagui";
 
 export default function ActivityScreen() {
   const query = trpc.booking.get.useQuery({ userId: 1 });
 
+
   return (
     <View style={styles.container}>
       {query.data && (
-        <XStack elevation={1} flex={1} flexWrap="wrap">
-          <FlatList
-            data={query.data}
-            renderItem={({ item }) => (
-              <ListItem
-                title={"Booking no." + item.id}
-                alignSelf="center"
-                backgroundColor={"grey"}
-                marginBottom={"$2"}
-                width={"95%"}
-                borderRadius={"$2"}
-                borderCurve="continuous"
-              >
-                <Separator />
-                <Text>Kamer {item.roomId}</Text>
-                <Text>Start: {formatDate(item.startTime)}</Text>
-                <Text>Eindigt: {formatDate(item.endTime)}</Text>
-                <Text>Booking status: {item.status}</Text>
-                <Text>User ID: {item.userId}</Text>
-                <View style={styles.separator}></View>
-              </View>
-            )}
-          />
-        </XStack>
+        <View>
+          <View>
+            <XStack>
+              <Button width={"30%"} paddingHorizontal={0}>PAST</Button>
+              <Button width={"30%"} paddingHorizontal={0}>ACTIVE</Button>
+              <Button width={"30%"} paddingHorizontal={0}>UPCOMING</Button>
+            </XStack>
+          </View>
+          <XStack>
+            <YGroup width={"95%"}>
+              <FlatList
+                data={query.data}
+                
+                renderItem={({ item }) => (
+                  <YGroup.Item>
+                    <ListItem
+                      title={"Booking no." + item.id}
+                      marginBottom={"$2"}
+                      backgroundColor={"grey"}
+                    >
+                      <Separator />
+                      <Text>Kamer {item.roomId}</Text>
+                      <Text>Start: {formatDate(item.startTime)}</Text>
+                      <Text>Eindigt: {formatDate(item.endTime)}</Text>
+                      <Text>Status van de boeking: {status[item.status]}</Text>
+                      <Text>Geboekt door: {item.user.name}</Text>
+                    </ListItem>
+                  </YGroup.Item>
+                )}
+              />
+            </YGroup>
+          </XStack>
+        </View>
       )}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
     </View>
