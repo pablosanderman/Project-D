@@ -31,7 +31,7 @@ export default function Two() {
             <Button
               onPress={() => router.push(option.href)}
               size={"$10"}
-              margin={"$2"}
+              margin={3}
               borderRadius={"$4"}
             >
               <Text textAlign="center">{option.name}</Text>

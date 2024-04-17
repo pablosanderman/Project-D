@@ -37,7 +37,7 @@ export default function Booking() {
               onPress={() => router.push(option.href)}
               size={"$10"}
               paddingHorizontal={"$0"}
-              margin={"$1"}
+              margin={3}
               borderRadius={"$4"}
             >
               <Text textAlign="center">{option.name}</Text>
