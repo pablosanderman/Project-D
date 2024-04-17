@@ -22,37 +22,13 @@ export default function HomeScreen() {
     });
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Project D</Text>
+    <View alignItems="center">
       <View
-        style={styles.separator}
         // lightColor="#eee"
         // darkColor="rgba(255,255,255,0.1)"
       />
-      <Link href="/booking/">Booking</Link>
-      <Button onPress={() => router.push("/booking/")}>Book a room</Button>
-      <Text>Hello World!</Text>
-      <Button onPress={createBooking} title="AAA" />
-      {mutation.error && (
-        <Text>Something went wrong! {mutation.error.message}</Text>
-      )}
+      <Button size="$10" marginBottom={10} marginTop={0} height={250} width={350} backgroundColor="darkgrey">hello</Button>
+      <Button size="$7" backgroundColor="grey" width={350} onPress={() => router.push("/booking/")}>Book a room</Button>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
