@@ -1,6 +1,7 @@
 import { FlatList, StyleSheet } from "react-native";
 
 import { trpc } from "@/utils/trpc";
+import type { AppRouter } from "@/server";
 import { useState } from "react";
 import {
   ListItem,
@@ -12,10 +13,24 @@ import {
   Text,
   View,
 } from "tamagui";
+import { set } from "zod";
+import { Booking } from "@prisma/client";
+import { inferRouterOutputs } from "@trpc/server";
 
 export default function ActivityScreen() {
   const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
-
+  type routerOutput = inferRouterOutputs<AppRouter>;
+  type bookingGetOutput = routerOutput["booking"]["get"][0];
+  const [filterState, setFilterState] = useState<any>(noFilter);
+  function noFilter(item: bookingGetOutput): boolean {
+    return true;
+  }
+  function setFilterPast() {
+    setFilterState(FilterPast);
+  }
+  function FilterPast(item: bookingGetOutput): Boolean {
+    return new Date(item.startTime) < new Date();
+  }
 
   return (
     <View style={styles.container}>
@@ -23,16 +38,25 @@ export default function ActivityScreen() {
         <View>
           <View>
             <XStack>
-              <Button width={"30%"} paddingHorizontal={0}>PAST</Button>
-              <Button width={"30%"} paddingHorizontal={0}>ACTIVE</Button>
-              <Button width={"30%"} paddingHorizontal={0}>UPCOMING</Button>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={setFilterPast}
+              >
+                PAST
+              </Button>
+              <Button width={"30%"} paddingHorizontal={0}>
+                ACTIVE
+              </Button>
+              <Button width={"30%"} paddingHorizontal={0}>
+                UPCOMING
+              </Button>
             </XStack>
           </View>
           <XStack>
             <YGroup width={"95%"} maxHeight={"95%"}>
               <FlatList
-                data={query.data}
-                
+                data={query.data.filter((item) => filterState(item) == true)}
                 renderItem={({ item }) => (
                   <YGroup.Item>
                     <ListItem
