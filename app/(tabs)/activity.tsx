@@ -16,6 +16,9 @@ import {
 import { set } from "zod";
 import { Booking } from "@prisma/client";
 import { inferRouterOutputs } from "@trpc/server";
+import { formatDate } from "@/utils/converters";
+
+const lang = "nl-NL";
 
 export default function ActivityScreen() {
   const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
@@ -66,8 +69,8 @@ export default function ActivityScreen() {
                     >
                       <Separator />
                       <Text>Kamer {item.roomId}</Text>
-                      <Text>Start: {formatDate(item.startTime)}</Text>
-                      <Text>Eindigt: {formatDate(item.endTime)}</Text>
+                      <Text>Start: {formatDate(item.startTime, lang)}</Text>
+                      <Text>Eindigt: {formatDate(item.endTime, lang)}</Text>
                       <Text>Status van de boeking: {item.status}</Text>
                       <Text>Geboekt door: {item.user.name}</Text>
                     </ListItem>
@@ -82,19 +85,6 @@ export default function ActivityScreen() {
     </View>
   );
 }
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-
-  const formattedDate = date.toLocaleString("nl-NL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  });
-  return formattedDate;
-};
 
 const styles = StyleSheet.create({
   container: {
