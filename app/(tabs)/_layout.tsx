@@ -2,7 +2,7 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
-import { History, Home, User } from "@tamagui/lucide-icons";
+import { Bean, History, Home, User } from "@tamagui/lucide-icons";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -44,7 +44,7 @@ export default function TabLayout() {
         name="activity"
         options={{
           title: "Activity",
-          tabBarIcon: ({ color }) => <History name="code" color={color} />,
+          tabBarIcon: ({ color }) => <History color={color} />,
         }}
       />
       <Tabs.Screen
