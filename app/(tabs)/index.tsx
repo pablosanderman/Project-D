@@ -5,13 +5,39 @@ import { trpc } from "@/utils/trpc";
 import { Link, router } from "expo-router";
 import { $Enums } from "@prisma/client";
 
+
+
 export default function HomeScreen() {
   const utils = trpc.useUtils();
   const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
-  let data: { userId: number; startTime: string; endTime: string; roomId: number; status: $Enums.BookingStatus; id: number; createdAt: string; updatedAt: string; };
+  let data: { userId: number; startTime: string; endTime: string; roomId: number; status: $Enums.BookingStatus; id: number; createdAt: string; updatedAt: string; } = { userId: 0, startTime: "", endTime: "", roomId: 0, status: "UPCOMING", id: 0, createdAt: "", updatedAt: "" };
   if(query.data) {
     data = query.data;
   }
+  // Function to split the string into month and day
+  function splitDate(dateString: string): { month: number, day: number } {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1; // Months are zero-based, so we add 1
+    const day = date.getDate();
+    return { month, day };
+}
+
+// Function to extract hours and minutes
+  function extractTime(dateString: string): { hours: number, minutes: number } {
+    const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return { hours, minutes };
+  }
+
+  const dateString = data.startTime;
+  const enddatesString = data.endTime;
+  const { month, day } = splitDate(dateString);
+  const { hours, minutes } = extractTime(dateString);
+  const startTime = `${hours}:${minutes}`;
+
+  const {hours: endhours, minutes: endminutes} = extractTime(enddatesString);
+  const endTime =  `${endhours}:${endminutes}`;
 
   const mutation = trpc.booking.create.useMutation({
     onSuccess(input) {
@@ -29,20 +55,17 @@ export default function HomeScreen() {
   };
   return (
     <View alignItems="center">
-      
-      <Button size="$10" marginBottom={10} marginTop={0} height={250} width={350} backgroundColor="darkgrey">
-        {query.data && (
-        <FlatList data={[query.data]} renderItem={({ item }) => (
-          <View>
-            <Text style={styles.title}>Booking</Text>
-            <Text >Room {data.roomId}</Text>
-            <Text >Start: {data.startTime}</Text>
-            <Text >End: {data.endTime}</Text>
-          </View>
-        )} 
-        />
-        )}</Button>
-      <Button size="$7" backgroundColor="grey" width={350} onPress={() => router.push("/booking/")}>book a room</Button>
+      <Button size="$10"  elevation={"$6"} shadowColor={"black"} marginBottom={10} marginTop={0} height={250} width={350} backgroundColor="darkgrey">
+        <View marginBottom={150} marginRight={0} width={100} marginLeft={300} maxHeight={100}>
+          <Text style={styles.title} >Booking</Text>
+          <Text width={75}>Room {data.roomId}</Text>
+        </View>
+        <View width={100} maxHeight={100} marginRight={400}> 
+          <Text >Start: {startTime}</Text>
+          <Text >End: {endTime}</Text>
+        </View>
+        </Button>
+      <Button size="$7" backgroundColor="grey" width={350} shadowColor={"$orange2Dark"} shadowOpacity={80} elevation={"$6"} onPress={() => router.push("/booking/")}>book a room</Button>
     </View>
   );
 }
