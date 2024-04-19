@@ -55,14 +55,16 @@ export default function HomeScreen() {
   };
   return (
     <View alignItems="center">
-      <Button size="$10"  elevation={"$6"} shadowColor={"black"} marginBottom={10} marginTop={0} height={250} width={350} backgroundColor="darkgrey">
-        <View marginBottom={150} marginRight={0} width={100} marginLeft={300} maxHeight={100}>
+      <Button size="$10"  elevation={"$6"} shadowColor={"black"} padding={"none"} marginBottom={10} marginTop={0} height={200} width={350} backgroundColor="darkgrey">
+        <View style={{flexDirection: 'column'}} marginRight={225}  marginBottom={50}>
+        <View marginBottom={50} >
           <Text style={styles.title} >Booking</Text>
           <Text width={75}>Room {data.roomId}</Text>
         </View>
-        <View width={100} maxHeight={100} marginRight={400}> 
+        <View > 
           <Text >Start: {startTime}</Text>
           <Text >End: {endTime}</Text>
+        </View>
         </View>
         </Button>
       <Button size="$7" backgroundColor="grey" width={350} shadowColor={"$orange2Dark"} shadowOpacity={80} elevation={"$6"} onPress={() => router.push("/booking/")}>book a room</Button>
@@ -71,18 +73,8 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
 });
