@@ -83,23 +83,27 @@ const users = [
   },
 ];
 
-const rooms = [
-  {
-    name: "Room 1",
-    type: RoomType.MEETING,
-    size: RoomSize.FOUR_TO_EIGHT,
-  },
-  {
-    name: "Room 2",
-    type: RoomType.FOCUS,
-    size: RoomSize.TWO_TO_FOUR,
-  },
-  {
-    name: "Room 3",
-    type: RoomType.DESK,
-    size: RoomSize.ONE_TO_TWO,
-  },
-];
+const rooms = [];
+
+for (let i = 1; i <= 100; i++) {
+  rooms.push({
+    name: `Room ${i}`,
+    type:
+      i % 3 === 0
+        ? RoomType.DESK
+        : i % 2 === 0
+        ? RoomType.FOCUS
+        : RoomType.MEETING,
+    size:
+      i % 4 === 0
+        ? RoomSize.EIGHT_TO_SIXTEEN
+        : i % 3 === 0
+        ? RoomSize.FOUR_TO_EIGHT
+        : i % 2 === 0
+        ? RoomSize.TWO_TO_FOUR
+        : RoomSize.ONE_TO_TWO,
+  });
+}
 
 export const seedingData = {
   bookings,
