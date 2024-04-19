@@ -1,5 +1,5 @@
 import { View } from "tamagui";
-import { useNavigation } from "expo-router";
+import { Href, useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
 import NavigationSelection from "@/components/NavigationSelection";
 
@@ -7,15 +7,24 @@ export default function Booking() {
   const options = [
     {
       text: "Meeting room",
-      href: "/booking/two",
+      href: {
+        pathname: "/booking/two" as Href<string>,
+        params: { roomType: "meeting" },
+      },
     },
     {
       text: "Focus room",
-      href: "/booking/two",
+      href: {
+        pathname: "/booking/two" as Href<string>,
+        params: { roomType: "focus" },
+      },
     },
     {
       text: "Desk",
-      href: "/booking/two",
+      href: {
+        pathname: "/booking/two" as Href<string>,
+        params: { roomType: "desk" },
+      },
     },
   ];
 

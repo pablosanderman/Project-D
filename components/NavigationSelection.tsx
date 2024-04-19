@@ -2,7 +2,7 @@ import { Href, router } from "expo-router";
 import { Button, View, XStack, Text } from "tamagui";
 interface SelectionItem {
   text: string;
-  href: string;
+  href: { pathname: Href<string>; params: Record<string, string> };
 }
 
 interface NavigationSelectionProps {
@@ -16,7 +16,7 @@ export default function NavigationSelection({
       {options.map((option, index) => (
         <View key={index} width={"50%"}>
           <Button
-            onPress={() => router.push(option.href as Href<string>)}
+            onPress={() => router.push(option.href)}
             size={"$10"}
             paddingHorizontal={"$2"}
             margin={3}
