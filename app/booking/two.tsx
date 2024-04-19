@@ -12,29 +12,29 @@ export default function Two() {
     {
       text: "1-2 people",
       href: {
-        pathname: "/booking/two" as Href<string>,
-        params: { roomType: roomType, people: "1-2" },
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "ONE_TO_TWO" },
       },
     },
     {
       text: "2-4 people",
       href: {
-        pathname: "/booking/two" as Href<string>,
-        params: { roomType: roomType, people: "2-4" },
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "TWO_TO_FOUR" },
       },
     },
     {
       text: "4-8 people",
       href: {
-        pathname: "/booking/two" as Href<string>,
-        params: { roomType: roomType, people: "4-8" },
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "FOUR_TO_EIGHT" },
       },
     },
     {
       text: "8-16 people",
       href: {
-        pathname: "/booking/two" as Href<string>,
-        params: { roomType: roomType, people: "8-16" },
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "EIGHT_TO_SIXTEEN" },
       },
     },
   ];

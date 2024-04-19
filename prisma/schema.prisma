@@ -22,8 +22,15 @@ enum BookingStatus {
 
 enum RoomType {
   MEETING
-  CONCENTRATION
+  FOCUS
   DESK
+}
+
+enum RoomSize {
+  ONE_TO_TWO
+  TWO_TO_FOUR
+  FOUR_TO_EIGHT
+  EIGHT_TO_SIXTEEN
 }
 
 model User {
@@ -55,4 +62,5 @@ model Room {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   type      RoomType
+  size      RoomSize
 }

@@ -9,21 +9,21 @@ export default function Booking() {
       text: "Meeting room",
       href: {
         pathname: "/booking/two" as Href<string>,
-        params: { roomType: "meeting" },
+        params: { roomType: "MEETING" },
       },
     },
     {
       text: "Focus room",
       href: {
         pathname: "/booking/two" as Href<string>,
-        params: { roomType: "focus" },
+        params: { roomType: "FOCUS" },
       },
     },
     {
       text: "Desk",
       href: {
         pathname: "/booking/two" as Href<string>,
-        params: { roomType: "desk" },
+        params: { roomType: "DESK" },
       },
     },
   ];

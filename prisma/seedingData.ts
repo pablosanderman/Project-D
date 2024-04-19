@@ -42,7 +42,7 @@
 //   type      RoomType
 // }
 
-import { BookingStatus, RoomType } from "@prisma/client";
+import { BookingStatus, RoomType, RoomSize } from "@prisma/client";
 
 const bookings = [
   {
@@ -87,14 +87,17 @@ const rooms = [
   {
     name: "Room 1",
     type: RoomType.MEETING,
+    size: RoomSize.FOUR_TO_EIGHT,
   },
   {
     name: "Room 2",
-    type: RoomType.CONCENTRATION,
+    type: RoomType.FOCUS,
+    size: RoomSize.TWO_TO_FOUR,
   },
   {
     name: "Room 3",
     type: RoomType.DESK,
+    size: RoomSize.ONE_TO_TWO,
   },
 ];
 
