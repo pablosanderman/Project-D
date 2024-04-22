@@ -24,28 +24,24 @@ export default function ActivityScreen() {
   const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
   type routerOutput = inferRouterOutputs<AppRouter>;
   type bookingGetOutput = routerOutput["booking"]["get"][0];
-  const [filterState, setFilterState] = useState<any>(noFilter);
-  function noFilter(item: bookingGetOutput): boolean {
-    return true;
-  }
-  function setFilterPast() {
-    setFilterState(FilterPast);
-  }
-  function FilterPast(item: bookingGetOutput): Boolean {
-    return new Date(item.startTime) < new Date();
-  }
+  // const [filterState, setFilterState] = useState<any>(noFilter);
+  // function noFilter(item: bookingGetOutput): boolean {
+  //   return true;
+  // }
+  // function setFilterPast() {
+  //   setFilterState(FilterPast);
+  // }
+  // function FilterPast(item: bookingGetOutput): Boolean {
+  //   return new Date(item.startTime) < new Date();
+  // }
 
   return (
     <View style={styles.container}>
       {query.data && (
         <View>
           <View>
-            <XStack>
-              <Button
-                width={"30%"}
-                paddingHorizontal={0}
-                onPress={setFilterPast}
-              >
+            <XStack gap={"$3"}>
+              <Button width={"30%"} paddingHorizontal={10}>
                 PAST
               </Button>
               <Button width={"30%"} paddingHorizontal={0}>
@@ -57,9 +53,9 @@ export default function ActivityScreen() {
             </XStack>
           </View>
           <XStack>
-            <YGroup width={"95%"} maxHeight={"95%"}>
+            <YGroup width={"97%"} maxHeight={"95%"}>
               <FlatList
-                data={query.data.filter((item) => filterState(item) == true)}
+                data={query.data.filter((item) => item)}
                 renderItem={({ item }) => (
                   <YGroup.Item>
                     <ListItem

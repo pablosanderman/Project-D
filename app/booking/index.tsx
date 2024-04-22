@@ -33,6 +33,7 @@ export default function Booking() {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Book a room",
+      headerBackTitle: "Home",
     });
   }, [navigation]);
 
