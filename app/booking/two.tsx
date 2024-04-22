@@ -1,44 +1,55 @@
-import { Text, View, Card, Button, XStack } from "tamagui";
-import { useRouter } from "expo-router";
+import { View } from "tamagui";
+import { Href, useLocalSearchParams, useNavigation } from "expo-router";
+import NavigationSelection from "@/components/NavigationSelection";
+import { useLayoutEffect } from "react";
+
+import { Text } from "tamagui";
 
 export default function Two() {
+  const { roomType } = useLocalSearchParams<{ roomType: string }>();
+
   const options = [
     {
-      name: "1-2 people",
-      href: "/booking/two",
+      text: "1-2 people",
+      href: {
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "ONE_TO_TWO" },
+      },
     },
     {
-      name: "2-4 people",
-      href: "/booking/two",
+      text: "2-4 people",
+      href: {
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "TWO_TO_FOUR" },
+      },
     },
     {
-      name: "4-8 people",
-      href: "/booking/two",
+      text: "4-8 people",
+      href: {
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "FOUR_TO_EIGHT" },
+      },
     },
     {
-      name: "8-16 people",
-      href: "/booking/two",
+      text: "8-16 people",
+      href: {
+        pathname: "/booking/confirmation" as Href<string>,
+        params: { roomType: roomType, size: "EIGHT_TO_SIXTEEN" },
+      },
     },
   ];
 
-  const router = useRouter();
+  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Book a room",
+    });
+  }, [navigation]);
 
   return (
     <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      <XStack flexWrap="wrap">
-        {options.map((option, index) => (
-          <View key={index} width={"50%"}>
-            <Button
-              onPress={() => router.push(option.href)}
-              size={"$10"}
-              margin={"$2"}
-              borderRadius={"$4"}
-            >
-              <Text textAlign="center">{option.name}</Text>
-            </Button>
-          </View>
-        ))}
-      </XStack>
+      <Text>room type: {roomType}</Text>
+      <NavigationSelection options={options} />
     </View>
   );
 }
