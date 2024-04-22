@@ -1,59 +1,90 @@
-import { Button, FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
-import { Text, View } from "tamagui";
 import { trpc } from "@/utils/trpc";
-import { ListItem, XStack, YGroup, Separator } from "tamagui";
+import type { AppRouter } from "@/server";
+import { useState } from "react";
+import {
+  ListItem,
+  Button,
+  Separator,
+  XStack,
+  YGroup,
+  styled,
+  Text,
+  View,
+} from "tamagui";
+import { set } from "zod";
+import { Booking } from "@prisma/client";
+import { inferRouterOutputs } from "@trpc/server";
+import { formatDate } from "@/utils/converters";
+
+const lang = "nl-NL";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({
-    userId: 1,
-    filter: { RoomType: "MEETING" },
-  });
+  const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
+  type routerOutput = inferRouterOutputs<AppRouter>;
+  type bookingGetOutput = routerOutput["booking"]["get"][0];
+  const [filterState, setFilterState] = useState<any>(noFilter);
+  function noFilter(item: bookingGetOutput): boolean {
+    return true;
+  }
+  function setFilterPast() {
+    setFilterState(FilterPast);
+  }
+  function FilterPast(item: bookingGetOutput): Boolean {
+    return new Date(item.startTime) < new Date();
+  }
 
   return (
     <View style={styles.container}>
       {query.data && (
-        <XStack elevation={1} flex={1} flexWrap="wrap">
-          <FlatList
-            data={query.data}
-            renderItem={({ item }) => (
-              <ListItem
-                title={"Booking no." + item.id}
-                alignSelf="center"
-                backgroundColor={"grey"}
-                marginBottom={"$2"}
-                width={"95%"}
-                borderRadius={"$2"}
-                borderCurve="continuous"
+        <View>
+          <View>
+            <XStack>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={setFilterPast}
               >
-                <Separator />
-                <Text>Kamer {item.roomId}</Text>
-                <Text>Starts: {formatDate(item.startTime)}</Text>
-                <Text>Ends: {formatDate(item.endTime)}</Text>
-                <Text>Status: {item.status}</Text>
-                <Text>Booked by: {item.user.name}</Text>
-              </ListItem>
-            )}
-          />
-        </XStack>
+                PAST
+              </Button>
+              <Button width={"30%"} paddingHorizontal={0}>
+                ACTIVE
+              </Button>
+              <Button width={"30%"} paddingHorizontal={0}>
+                UPCOMING
+              </Button>
+            </XStack>
+          </View>
+          <XStack>
+            <YGroup width={"95%"} maxHeight={"95%"}>
+              <FlatList
+                data={query.data.filter((item) => filterState(item) == true)}
+                renderItem={({ item }) => (
+                  <YGroup.Item>
+                    <ListItem
+                      title={"Booking no." + item.id}
+                      marginBottom={"$2"}
+                      backgroundColor={"grey"}
+                    >
+                      <Separator />
+                      <Text>Kamer {item.roomId}</Text>
+                      <Text>Start: {formatDate(item.startTime, lang)}</Text>
+                      <Text>Eindigt: {formatDate(item.endTime, lang)}</Text>
+                      <Text>Status van de boeking: {item.status}</Text>
+                      <Text>Geboekt door: {item.user.name}</Text>
+                    </ListItem>
+                  </YGroup.Item>
+                )}
+              />
+            </YGroup>
+          </XStack>
+        </View>
       )}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
     </View>
   );
 }
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-
-  const formattedDate = date.toLocaleString("nl-NL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  });
-  return formattedDate;
-};
 
 const styles = StyleSheet.create({
   container: {
