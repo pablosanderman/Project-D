@@ -12,7 +12,7 @@ export const bookingRouter = router({
         endTime: z.string().datetime(),
         roomId: z.number(),
         status: z.enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"]),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { input } = opts;
@@ -24,13 +24,38 @@ export const bookingRouter = router({
     .input(
       z.object({
         userId: z.number(),
-      })
     )
     .query(async (opts) => {
-      const { userId } = opts.input;
+      const { userId, filter } = opts.input;
       return await prisma.booking.findMany({
         where: {
           userId: userId,
+          status: filter.status,
+          startTime: {
+            gte: filter.startDate,
+            lte: filter.endDate,
+          },
+          roomId: filter.room,
+          room: {
+            type: filter.RoomType,
+          },
+        },
+        include: {
+          user: true,
+          room: true,
+        },
+      });
+    }),
+  getMostRecentBooking: publicProcedure
+    .input(z.object({ userId: z.number() }))
+    .query(async (opts) => {
+      const {userId} = opts.input;
+      return await prisma.booking.findFirst({
+        where: {
+          userId: userId,
+        },
+        orderBy: {
+          startTime: "desc",
         },
       });
     }),
@@ -39,7 +64,7 @@ export const bookingRouter = router({
       z.object({
         id: z.number(),
         status: z.string(),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { id, status } = opts.input;
