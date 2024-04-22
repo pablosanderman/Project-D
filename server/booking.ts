@@ -12,7 +12,7 @@ export const bookingRouter = router({
         endTime: z.string().datetime(),
         roomId: z.number(),
         status: z.enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"]),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { input } = opts;
@@ -24,16 +24,6 @@ export const bookingRouter = router({
     .input(
       z.object({
         userId: z.number(),
-        filter: z.object({
-          status: z
-            .enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"])
-            .optional(),
-          startDate: z.string().datetime().optional(),
-          endDate: z.string().datetime().optional(),
-          room: z.number().optional(),
-          RoomType: z.enum(["MEETING", "CONCENTRATION", "DESK"]).optional(),
-        }),
-      })
     )
     .query(async (opts) => {
       const { userId, filter } = opts.input;
@@ -56,12 +46,25 @@ export const bookingRouter = router({
         },
       });
     }),
+  getMostRecentBooking: publicProcedure
+    .input(z.object({ userId: z.number() }))
+    .query(async (opts) => {
+      const {userId} = opts.input;
+      return await prisma.booking.findFirst({
+        where: {
+          userId: userId,
+        },
+        orderBy: {
+          startTime: "desc",
+        },
+      });
+    }),
   setStatus: publicProcedure
     .input(
       z.object({
         id: z.number(),
         status: z.string(),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { id, status } = opts.input;

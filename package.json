@@ -15,6 +15,7 @@
     "@react-navigation/native": "^6.0.2",
     "@tamagui/babel-plugin": "^1.94.5",
     "@tamagui/config": "^1.94.5",
+    "@tamagui/lucide-icons": "^1.94.5",
     "@tanstack/react-query": "latest",
     "@trpc/client": "next",
     "@trpc/next": "next",
@@ -33,6 +34,7 @@
     "react-native": "0.73.6",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
+    "react-native-svg": "^15.1.0",
     "react-native-web": "~0.19.6",
     "tamagui": "^1.94.5",
     "zod": "^3.22.4"
