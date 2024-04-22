@@ -24,13 +24,25 @@ export const bookingRouter = router({
     .input(
       z.object({
         userId: z.number(),
-      }),
     )
     .query(async (opts) => {
-      const { userId } = opts.input;
+      const { userId, filter } = opts.input;
       return await prisma.booking.findMany({
         where: {
           userId: userId,
+          status: filter.status,
+          startTime: {
+            gte: filter.startDate,
+            lte: filter.endDate,
+          },
+          roomId: filter.room,
+          room: {
+            type: filter.RoomType,
+          },
+        },
+        include: {
+          user: true,
+          room: true,
         },
       });
     }),
