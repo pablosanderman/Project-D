@@ -1,7 +1,7 @@
 import { router, publicProcedure, createCallerFactory } from "../trpc";
 import z from "zod";
 import prisma from "@/utils/prisma";
-import { BookingStatus, RoomType } from "@prisma/client";
+import { BookingStatus, RoomSize, RoomType } from "@prisma/client";
 
 export const bookingRouter = router({
   create: publicProcedure
@@ -32,6 +32,14 @@ export const bookingRouter = router({
           endDate: z.string().datetime().optional(),
           room: z.number().optional(),
           RoomType: z.enum(["MEETING", "FOCUS", "DESK"]).optional(),
+          RoomSize: z
+            .enum([
+              "ONE_TO_TWO",
+              "TWO_TO_FOUR",
+              "FOUR_TO_EIGHT",
+              "EIGHT_TO_SIXTEEN",
+            ])
+            .optional(),
         }),
       })
     )
@@ -48,6 +56,7 @@ export const bookingRouter = router({
           roomId: filter.room,
           room: {
             type: filter.RoomType,
+            size: filter.RoomSize,
           },
         },
         include: {
