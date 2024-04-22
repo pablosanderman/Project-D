@@ -5,7 +5,6 @@ import { trpc } from "@/utils/trpc";
 import { RoomType, RoomSize, Booking, Room } from "@prisma/client";
 
 import { Text } from "tamagui";
-import { Use } from "react-native-svg";
 
 export default function Confirmation() {
   const [newBooking, setNewBooking] = useState<Booking | null>(null);
@@ -22,12 +21,6 @@ export default function Confirmation() {
 
   const utils = trpc.useUtils();
 
-  // get random room for development purposes
-  const randomRoom = trpc.room.getRoomsByTypeAndSize.useQuery({
-    type: roomType as RoomType,
-    size: size as RoomSize,
-  }).data?.[0];
-
   const mutation = trpc.booking.create.useMutation({
     onSuccess() {
       utils.booking.invalidate(); // refresh cache
@@ -35,12 +28,13 @@ export default function Confirmation() {
   });
 
   // create a demo booking with IN_PROGRESS status
+  // Hardcoded values for demonstration purposes: userId: 1, roomId: 50
   const createBooking = async () => {
     const booking = await mutation.mutateAsync({
       userId: 1,
       startTime: new Date().toISOString(),
       endTime: new Date().toISOString(),
-      roomId: randomRoom?.id!,
+      roomId: 50,
       status: "IN_PROGRESS",
     });
 
@@ -54,8 +48,6 @@ export default function Confirmation() {
 
     setNewBooking(formattedBooking);
   };
-
-  const room = trpc.room.get.useQuery(randomRoom?.id!).data!;
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -71,7 +63,7 @@ export default function Confirmation() {
       </Text>
       {newBooking && (
         <Text>
-          {`\n\n\n\nRoom Info\n\nroom: ${room.name}\ntype: ${room.type}\nsize: ${room.size}\nstart:   ${newBooking.startTime}\nend:     ${newBooking.endTime}`}
+          {`\n\n\n\nRoom Info\n\nroom: *room name*\ntype: *roomType*\nsize: *roomSize*\nstart:   ${newBooking.startTime}\nend:     ${newBooking.endTime}`}
         </Text>
       )}
     </View>
