@@ -1,8 +1,8 @@
-import { Href, router } from "expo-router";
+import { router } from "expo-router";
 import { Button, View, XStack, Text } from "tamagui";
 interface SelectionItem {
   text: string;
-  href: { pathname: Href<string>; params: Record<string, string> };
+  href: { pathname: string; params: Record<string, string> };
 }
 
 interface NavigationSelectionProps {
