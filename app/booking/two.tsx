@@ -1,5 +1,5 @@
 import { View } from "tamagui";
-import { Href, useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import NavigationSelection from "@/components/NavigationSelection";
 import { useLayoutEffect } from "react";
 
@@ -12,29 +12,29 @@ export default function Two() {
     {
       text: "1-2 people",
       href: {
-        pathname: "/booking/confirmation" as Href<string>,
-        params: { roomType: roomType, size: "ONE_TO_TWO" },
+        pathname: "/booking/confirmation",
+        params: { roomType: roomType as string, size: "ONE_TO_TWO" },
       },
     },
     {
       text: "2-4 people",
       href: {
-        pathname: "/booking/confirmation" as Href<string>,
-        params: { roomType: roomType, size: "TWO_TO_FOUR" },
+        pathname: "/booking/confirmation",
+        params: { roomType: roomType as string, size: "TWO_TO_FOUR" },
       },
     },
     {
       text: "4-8 people",
       href: {
-        pathname: "/booking/confirmation" as Href<string>,
-        params: { roomType: roomType, size: "FOUR_TO_EIGHT" },
+        pathname: "/booking/confirmation",
+        params: { roomType: roomType as string, size: "FOUR_TO_EIGHT" },
       },
     },
     {
       text: "8-16 people",
       href: {
-        pathname: "/booking/confirmation" as Href<string>,
-        params: { roomType: roomType, size: "EIGHT_TO_SIXTEEN" },
+        pathname: "/booking/confirmation",
+        params: { roomType: roomType as string, size: "EIGHT_TO_SIXTEEN" },
       },
     },
   ];
