@@ -5,36 +5,36 @@ import { useLayoutEffect } from "react";
 
 import { Text } from "tamagui";
 
-export default function Two() {
+export default function RoomSize() {
   const { roomType } = useLocalSearchParams<{ roomType: string }>();
 
   const options = [
     {
       text: "1-2 people",
       href: {
-        pathname: "/booking/confirmation",
-        params: { roomType: roomType as string, size: "ONE_TO_TWO" },
+        pathname: "/booking/datetime",
+        params: { roomType: roomType as string, roomSize: "ONE_TO_TWO" },
       },
     },
     {
       text: "2-4 people",
       href: {
-        pathname: "/booking/confirmation",
-        params: { roomType: roomType as string, size: "TWO_TO_FOUR" },
+        pathname: "/booking/datetime",
+        params: { roomType: roomType as string, roomSize: "TWO_TO_FOUR" },
       },
     },
     {
       text: "4-8 people",
       href: {
-        pathname: "/booking/confirmation",
-        params: { roomType: roomType as string, size: "FOUR_TO_EIGHT" },
+        pathname: "/booking/datetime",
+        params: { roomType: roomType as string, roomSize: "FOUR_TO_EIGHT" },
       },
     },
     {
       text: "8-16 people",
       href: {
-        pathname: "/booking/confirmation",
-        params: { roomType: roomType as string, size: "EIGHT_TO_SIXTEEN" },
+        pathname: "/booking/datetime",
+        params: { roomType: roomType as string, roomSize: "EIGHT_TO_SIXTEEN" },
       },
     },
   ];
@@ -48,7 +48,6 @@ export default function Two() {
 
   return (
     <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      <Text>room type: {roomType}</Text>
       <NavigationSelection options={options} />
     </View>
   );

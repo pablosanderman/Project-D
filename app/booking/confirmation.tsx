@@ -1,52 +1,66 @@
 import { Button, View } from "tamagui";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
-import { RoomType, RoomSize, Booking, Room } from "@prisma/client";
 
 import { Text } from "tamagui";
 
 export default function Confirmation() {
-  const [newBooking, setNewBooking] = useState<Booking | null>(null);
+  const { roomType, roomSize, startTime, endTime } = useLocalSearchParams<{
+    roomType: string;
+    roomSize: string;
+    startTime: string;
+    endTime: string;
+  }>();
+  const recommendation = {
+    roomId: 0,
+    floor: 0,
+  };
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     (async () => {
-      createBooking();
+      // recommend booking function placeholders
+      recommendation.roomId = 50;
+      recommendation.floor = 1;
     })();
   }, []);
 
-  const { roomType, size } = useLocalSearchParams<{
-    roomType: string;
-    size: string;
-  }>();
-
-  const utils = trpc.useUtils();
-
   const mutation = trpc.booking.create.useMutation({
     onSuccess() {
-      utils.booking.invalidate(); // refresh cache
+      setError(null); // clear any previous error
+      router.push("/booking/finish");
+    },
+    onError(err) {
+      setError(err.message);
     },
   });
 
-  // create a demo booking with IN_PROGRESS status
-  // Hardcoded values for demonstration purposes: userId: 1, roomId: 50
   const createBooking = async () => {
-    const booking = await mutation.mutateAsync({
+    await mutation.mutateAsync({
       userId: 1,
-      startTime: new Date().toISOString(),
-      endTime: new Date().toISOString(),
-      roomId: 50,
-      status: "IN_PROGRESS",
+      startTime: startTime as string,
+      endTime: endTime as string,
+      roomId: recommendation.roomId,
+      status: "UPCOMING",
     });
+  };
 
-    const formattedBooking = {
-      ...booking,
-      startTime: new Date(booking.startTime),
-      endTime: new Date(booking.endTime),
-      createdAt: new Date(booking.createdAt),
-      updatedAt: new Date(booking.updatedAt),
-    };
+  const createBookingAndNavigate = () => {
+    createBooking();
+    router.push(href);
+  };
 
-    setNewBooking(formattedBooking);
+  const href = {
+    pathname: "/booking/finish",
+    params: {
+      roomType: roomType as string,
+      roomSize: roomSize as string,
+      startTime: startTime,
+      endTime: endTime,
+      roomId: recommendation.roomId,
+      floor: recommendation.floor,
+    },
   };
 
   const navigation = useNavigation();
@@ -59,13 +73,15 @@ export default function Confirmation() {
   return (
     <View marginTop={"$8"} paddingHorizontal={"$2"}>
       <Text>
-        {`(debug parameters)\n\ntype:    ${roomType}\nsize:    ${size}\ntime:    ${new Date().toISOString()}`}
+        {`(debug parameters)\n\ntype:    ${roomType}\nsize:    ${roomSize}\ntime:    ${new Date().toISOString()}`}
       </Text>
-      {newBooking && (
+      {recommendation && (
         <Text>
-          {`\n\n\n\nRoom Info\n\nroom: *room name*\ntype: *roomType*\nsize: *roomSize*\nstart:   ${newBooking.startTime}\nend:     ${newBooking.endTime}`}
+          {`\n\n\n\nRoom Info\n\nroom: ${recommendation.roomId}\nfloor: ${recommendation.floor}\ntype: ${roomType}\nsize: ${roomSize}\nstart:   ${startTime}\nend:     ${endTime}`}
         </Text>
       )}
+      <Button onPress={createBookingAndNavigate}>Confirm booking</Button>
+      {error && <Text>Error: {error}</Text>}
     </View>
   );
 }

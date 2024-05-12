@@ -3,26 +3,26 @@ import { useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
 import NavigationSelection from "@/components/NavigationSelection";
 
-export default function Booking() {
+export default function RoomType() {
   const options = [
     {
       text: "Meeting room",
       href: {
-        pathname: "/booking/two",
+        pathname: "/booking/size",
         params: { roomType: "MEETING" },
       },
     },
     {
       text: "Focus room",
       href: {
-        pathname: "/booking/two",
+        pathname: "/booking/size",
         params: { roomType: "FOCUS" },
       },
     },
     {
       text: "Desk",
       href: {
-        pathname: "/booking/two",
+        pathname: "/booking/size",
         params: { roomType: "DESK" },
       },
     },

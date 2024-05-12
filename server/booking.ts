@@ -16,9 +16,11 @@ export const bookingRouter = router({
     )
     .mutation(async (opts) => {
       const { input } = opts;
-      return await prisma.booking.create({
-        data: input,
-      });
+      return await prisma.$transaction([
+        prisma.booking.create({
+          data: input,
+        }),
+      ]);
     }),
   get: publicProcedure
     .input(

@@ -12,6 +12,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.1",
     "@prisma/client": "^5.11.0",
+    "@react-native-community/datetimepicker": "7.7.0",
     "@react-navigation/native": "^6.0.2",
     "@tamagui/babel-plugin": "^1.94.5",
     "@tamagui/config": "^1.94.5",
