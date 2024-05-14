@@ -1,50 +1,45 @@
-import { Text, View, XStack, Button } from "tamagui";
-import { useNavigation, useRouter } from "expo-router";
+import { View } from "tamagui";
+import { useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
+import NavigationSelection from "@/components/NavigationSelection";
 
 export default function Booking() {
   const options = [
     {
-      name: "Meeting room",
-      href: "/booking/two",
+      text: "Meeting room",
+      href: {
+        pathname: "/booking/two",
+        params: { roomType: "MEETING" },
+      },
     },
     {
-      name: "Concentration room",
-      href: "/booking/two",
+      text: "Focus room",
+      href: {
+        pathname: "/booking/two",
+        params: { roomType: "FOCUS" },
+      },
     },
     {
-      name: "Desk",
-      href: "/booking/two",
+      text: "Desk",
+      href: {
+        pathname: "/booking/two",
+        params: { roomType: "DESK" },
+      },
     },
   ];
-
-  const router = useRouter();
 
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Book a room",
+      headerBackTitle: "Home",
     });
   }, [navigation]);
 
   return (
     <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      <XStack flexWrap="wrap">
-        {options.map((option, index) => (
-          <View key={index} width={"50%"}>
-            <Button
-              onPress={() => router.push(option.href)}
-              size={"$10"}
-              paddingHorizontal={"$0"}
-              margin={"$1"}
-              borderRadius={"$4"}
-            >
-              <Text textAlign="center">{option.name}</Text>
-            </Button>
-          </View>
-        ))}
-      </XStack>
+      <NavigationSelection options={options} />
     </View>
   );
 }

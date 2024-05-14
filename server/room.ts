@@ -7,7 +7,13 @@ export const roomRouter = router({
     .input(
       z.object({
         name: z.string(),
-        type: z.enum(["MEETING", "CONCENTRATION", "DESK"]),
+        type: z.enum(["MEETING", "FOCUS", "DESK"]),
+        size: z.enum([
+          "ONE_TO_TWO",
+          "TWO_TO_FOUR",
+          "FOUR_TO_EIGHT",
+          "EIGHT_TO_SIXTEEN",
+        ]),
       })
     )
     .mutation(async (opts) => {
@@ -27,6 +33,27 @@ export const roomRouter = router({
   getRooms: publicProcedure.query(async () => {
     return await prisma.room.findMany();
   }),
+  getRoomsByTypeAndSize: publicProcedure
+    .input(
+      z.object({
+        type: z.enum(["MEETING", "FOCUS", "DESK"]),
+        size: z.enum([
+          "ONE_TO_TWO",
+          "TWO_TO_FOUR",
+          "FOUR_TO_EIGHT",
+          "EIGHT_TO_SIXTEEN",
+        ]),
+      })
+    )
+    .query(async (opts) => {
+      const { input } = opts;
+      return await prisma.room.findMany({
+        where: {
+          type: input.type,
+          size: input.size,
+        },
+      });
+    }),
 });
 
 // 1. create a caller-function for your router
