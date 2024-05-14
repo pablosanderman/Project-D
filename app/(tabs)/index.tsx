@@ -50,8 +50,8 @@ export default function HomeScreen() {
 
   const dateString = data.startTime;
   const enddatesString = data.endTime;
-  const startTime = formatDate(dateString, "nl-NL");
-  const endTime = formatDate(enddatesString, "nl-NL");
+  const startTime = formatDate(dateString, "datetime");
+  const endTime = formatDate(enddatesString, "datetime");
   const mutation = trpc.booking.create.useMutation({
     onSuccess(input) {
       utils.booking.invalidate();

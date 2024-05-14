@@ -18,8 +18,6 @@ import { Booking } from "@prisma/client";
 import { inferRouterOutputs } from "@trpc/server";
 import { formatDate } from "@/utils/converters";
 
-const lang = "nl-NL";
-
 export default function ActivityScreen() {
   const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
   type routerOutput = inferRouterOutputs<AppRouter>;
@@ -65,8 +63,12 @@ export default function ActivityScreen() {
                     >
                       <Separator />
                       <Text>Kamer {item.roomId}</Text>
-                      <Text>Start: {formatDate(item.startTime, lang)}</Text>
-                      <Text>Eindigt: {formatDate(item.endTime, lang)}</Text>
+                      <Text>
+                        Start: {formatDate(item.startTime, "datetime")}
+                      </Text>
+                      <Text>
+                        Eindigt: {formatDate(item.endTime, "datetime")}
+                      </Text>
                       <Text>Status van de boeking: {item.status}</Text>
                       <Text>Geboekt door: {item.user.name}</Text>
                     </ListItem>

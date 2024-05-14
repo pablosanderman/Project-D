@@ -6,15 +6,19 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 
 import { Text } from "tamagui";
+import { formatDate } from "@/utils/converters";
 
 export default function DateTime() {
   const { roomType, roomSize } = useLocalSearchParams<{
     roomType: string;
     roomSize: string;
   }>();
+  const defaultEndDate = new Date();
+  defaultEndDate.setHours(defaultEndDate.getHours() + 1);
+
   const [date, setDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(defaultEndDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
@@ -55,7 +59,7 @@ export default function DateTime() {
       <View marginLeft="$7">
         <Text>Date:</Text>
         <Button width="$20" onPress={() => setShowDatePicker(true)}>
-          {date.toDateString()}
+          {formatDate(date.toISOString(), "date")}
         </Button>
         {showDatePicker && (
           <DateTimePicker
@@ -71,7 +75,7 @@ export default function DateTime() {
           <View>
             <Text>Start time:</Text>
             <Button onPress={() => setShowStartTimePicker(true)}>
-              {startTime.toTimeString().split(" ")[0]}
+              {formatDate(startTime.toISOString(), "timeonly")}
             </Button>
             {showStartTimePicker && (
               <DateTimePicker
@@ -89,7 +93,7 @@ export default function DateTime() {
           <View>
             <Text>End time:</Text>
             <Button onPress={() => setShowEndTimePicker(true)}>
-              {endTime.toTimeString().split(" ")[0]}
+              {formatDate(endTime.toISOString(), "timeonly")}
             </Button>
             {showEndTimePicker && (
               <DateTimePicker

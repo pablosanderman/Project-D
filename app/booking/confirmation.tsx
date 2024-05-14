@@ -2,6 +2,7 @@ import { Button, View } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
+import { formatDate } from "@/utils/converters";
 
 import { Text } from "tamagui";
 
@@ -46,8 +47,8 @@ export default function Confirmation() {
     });
   };
 
-  const createBookingAndNavigate = () => {
-    createBooking();
+  const createBookingAndNavigate = async () => {
+    await createBooking();
     router.push(href);
   };
 
@@ -73,11 +74,19 @@ export default function Confirmation() {
   return (
     <View marginTop={"$8"} paddingHorizontal={"$2"}>
       <Text>
-        {`(debug parameters)\n\ntype:    ${roomType}\nsize:    ${roomSize}\ntime:    ${new Date().toISOString()}`}
+        {`(debug parameters)\n\ntype:    ${roomType}\nsize:    ${roomSize}\ncurrent time:    ${new Date().toISOString()}`}
       </Text>
       {recommendation && (
         <Text>
-          {`\n\n\n\nRoom Info\n\nroom: ${recommendation.roomId}\nfloor: ${recommendation.floor}\ntype: ${roomType}\nsize: ${roomSize}\nstart:   ${startTime}\nend:     ${endTime}`}
+          {`\n\n\n\nRoom Info\n\nRoom number: ${
+            recommendation.roomId
+          }\nType of room : ${roomType}\nFloor: ${
+            recommendation.floor
+          }\nTime: ${formatDate(startTime!, "timeonly")} - ${formatDate(
+            endTime!,
+            "timeonly"
+          )}`}{" "}
+          {formatDate(startTime!, "weekday")}
         </Text>
       )}
       <Button onPress={createBookingAndNavigate}>Confirm booking</Button>
