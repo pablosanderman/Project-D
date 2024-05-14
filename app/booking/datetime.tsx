@@ -16,6 +16,8 @@ export default function DateTime() {
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+  const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
   const href = {
     pathname: "/booking/confirmation",
@@ -27,7 +29,7 @@ export default function DateTime() {
     },
   };
 
-  const onChange = (
+  const onChangeDate = (
     event: DateTimePickerEvent,
     selectedDate: Date | undefined
   ) => {
@@ -52,7 +54,36 @@ export default function DateTime() {
           value={date}
           mode={"date"}
           display={"default"}
-          onChange={onChange}
+          minimumDate={new Date()}
+          onChange={onChangeDate}
+        />
+      )}
+      <Text>Start time:</Text>
+      <Button onPress={() => setShowStartTimePicker(true)}>Select time</Button>
+      {showStartTimePicker && (
+        <DateTimePicker
+          value={startTime}
+          mode={"time"}
+          display={"default"}
+          onChange={(event, selectedTime) => {
+            const currentDate = selectedTime || startTime;
+            setStartTime(currentDate);
+            setShowStartTimePicker(false);
+          }}
+        />
+      )}
+      <Text>End time:</Text>
+      <Button onPress={() => setShowEndTimePicker(true)}>Select time</Button>
+      {showEndTimePicker && (
+        <DateTimePicker
+          value={endTime}
+          mode={"time"}
+          display={"default"}
+          onChange={(event, selectedTime) => {
+            const currentDate = selectedTime || endTime;
+            setEndTime(currentDate);
+            setShowEndTimePicker(false);
+          }}
         />
       )}
       <Button
