@@ -103,6 +103,7 @@ export default function HomeScreen() {
       >
         book a room
       </Button>
+      <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
     </View>
   );
 }
