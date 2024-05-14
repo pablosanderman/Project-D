@@ -1,11 +1,10 @@
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { Text, View, Button } from "tamagui";
 import { trpc } from "@/utils/trpc";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { $Enums } from "@prisma/client";
 import { formatDate } from "@/utils/converters";
-import { AlignCenter } from "@tamagui/lucide-icons";
 
 export default function HomeScreen() {
   const utils = trpc.useUtils();

@@ -12,7 +12,7 @@ export const bookingRouter = router({
         endTime: z.string().datetime(),
         roomId: z.number(),
         status: z.enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"]),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { input } = opts;
@@ -32,16 +32,9 @@ export const bookingRouter = router({
           endDate: z.string().datetime().optional(),
           room: z.number().optional(),
           RoomType: z.enum(["MEETING", "FOCUS", "DESK"]).optional(),
-          RoomSize: z
-            .enum([
-              "ONE_TO_TWO",
-              "TWO_TO_FOUR",
-              "FOUR_TO_EIGHT",
-              "EIGHT_TO_SIXTEEN",
-            ])
-            .optional(),
+          Capacity: z.number().optional(),
         }),
-      })
+      }),
     )
     .query(async (opts) => {
       const { userId, filter } = opts.input;
@@ -56,7 +49,7 @@ export const bookingRouter = router({
           roomId: filter.room,
           room: {
             type: filter.RoomType,
-            size: filter.RoomSize,
+            capacity: filter.Capacity,
           },
         },
         include: {
@@ -83,7 +76,7 @@ export const bookingRouter = router({
       z.object({
         id: z.number(),
         status: z.string(),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { id, status } = opts.input;
