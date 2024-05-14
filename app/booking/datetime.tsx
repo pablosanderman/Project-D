@@ -46,51 +46,72 @@ export default function DateTime() {
   }, [navigation]);
 
   return (
-    <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      <Text>Date:</Text>
-      <Button onPress={() => setShowDatePicker(true)}>Select date</Button>
-      {showDatePicker && (
-        <DateTimePicker
-          value={date}
-          mode={"date"}
-          display={"default"}
-          minimumDate={new Date()}
-          onChange={onChangeDate}
-        />
-      )}
-      <Text>Start time:</Text>
-      <Button onPress={() => setShowStartTimePicker(true)}>Select time</Button>
-      {showStartTimePicker && (
-        <DateTimePicker
-          value={startTime}
-          mode={"time"}
-          display={"default"}
-          onChange={(event, selectedTime) => {
-            const currentDate = selectedTime || startTime;
-            setStartTime(currentDate);
-            setShowStartTimePicker(false);
-          }}
-        />
-      )}
-      <Text>End time:</Text>
-      <Button onPress={() => setShowEndTimePicker(true)}>Select time</Button>
-      {showEndTimePicker && (
-        <DateTimePicker
-          value={endTime}
-          mode={"time"}
-          display={"default"}
-          onChange={(event, selectedTime) => {
-            const currentDate = selectedTime || endTime;
-            setEndTime(currentDate);
-            setShowEndTimePicker(false);
-          }}
-        />
-      )}
+    <View
+      marginTop={"$8"}
+      paddingHorizontal={"$2"}
+      display="flex"
+      flexDirection="column"
+    >
+      <View marginLeft="$7">
+        <Text>Date:</Text>
+        <Button width="$20" onPress={() => setShowDatePicker(true)}>
+          {date.toDateString()}
+        </Button>
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode={"date"}
+            display={"default"}
+            minimumDate={new Date()}
+            onChange={onChangeDate}
+          />
+        )}
+
+        <View flexDirection="row" gap="$10">
+          <View>
+            <Text>Start time:</Text>
+            <Button onPress={() => setShowStartTimePicker(true)}>
+              {startTime.toTimeString().split(" ")[0]}
+            </Button>
+            {showStartTimePicker && (
+              <DateTimePicker
+                value={startTime}
+                mode={"time"}
+                display={"default"}
+                onChange={(event, selectedTime) => {
+                  const currentDate = selectedTime || startTime;
+                  setStartTime(currentDate);
+                  setShowStartTimePicker(false);
+                }}
+              />
+            )}
+          </View>
+          <View>
+            <Text>End time:</Text>
+            <Button onPress={() => setShowEndTimePicker(true)}>
+              {endTime.toTimeString().split(" ")[0]}
+            </Button>
+            {showEndTimePicker && (
+              <DateTimePicker
+                value={endTime}
+                mode={"time"}
+                display={"default"}
+                onChange={(event, selectedTime) => {
+                  const currentDate = selectedTime || endTime;
+                  setEndTime(currentDate);
+                  setShowEndTimePicker(false);
+                }}
+              />
+            )}
+          </View>
+        </View>
+      </View>
       <Button
         onPress={() => router.push(href)}
         size={"$10"}
         paddingHorizontal={"$2"}
-        margin={3}
+        marginVertical={"$8"}
+        marginHorizontal={"$8"}
         borderRadius={"$4"}
       >
         <Text textAlign="center">Continue</Text>
