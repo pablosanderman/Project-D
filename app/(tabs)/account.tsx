@@ -1,6 +1,7 @@
 import { Button, FlatList, StyleSheet } from "react-native";
 
 import { trpc } from "@/utils/trpc";
+import { router } from "expo-router";
 import { Text, View } from "tamagui";
 
 export default function AccountScreen() {
@@ -10,6 +11,9 @@ export default function AccountScreen() {
     <View style={styles.container}>
       <Text style={styles.separator}></Text>
       {user.data && <Text style={styles.title}>{user.data.name}</Text>}
+      <View>
+        <Button title="Log in" onPress={() => {router.push("./LoginScreen")}} />
+      </View>
     </View>
   );
 }
