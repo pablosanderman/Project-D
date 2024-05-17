@@ -1,11 +1,11 @@
-import { Button, View } from "tamagui";
+import { Button, View, Text, styled } from "tamagui";
+import { Calendar, Clock } from "@tamagui/lucide-icons";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect, useState } from "react";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-import { Text } from "tamagui";
 import { formatDate } from "@/utils/converters";
 
 export default function DateTime() {
@@ -23,6 +23,8 @@ export default function DateTime() {
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
+  let isUnpressable = false;
+
   const href = {
     pathname: "/booking/confirmation",
     params: {
@@ -37,9 +39,9 @@ export default function DateTime() {
     event: DateTimePickerEvent,
     selectedDate: Date | undefined
   ) => {
+    setShowDatePicker(false);
     const currentDate = selectedDate || date;
     setDate(currentDate);
-    setShowDatePicker(false);
   };
 
   const navigation = useNavigation();
@@ -50,76 +52,124 @@ export default function DateTime() {
   }, [navigation]);
 
   return (
-    <View
-      marginTop={"$8"}
-      paddingHorizontal={"$2"}
-      display="flex"
-      flexDirection="column"
-    >
-      <View marginLeft="$7">
-        <Text>Date:</Text>
-        <Button width="$20" onPress={() => setShowDatePicker(true)}>
-          {formatDate(date.toISOString(), "date")}
-        </Button>
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode={"date"}
-            display={"default"}
-            minimumDate={new Date()}
-            onChange={onChangeDate}
-          />
-        )}
+    <MainContainer>
+      <DateTimePickerContainer>
+        <DatePickerContainer>
+          <Text>Date:</Text>
+          <DatePickerButton
+            icon={Calendar}
+            onPress={() => setShowDatePicker(true)}
+          >
+            {formatDate(date.toISOString(), "date")}
+          </DatePickerButton>
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode={"date"}
+              display={"default"}
+              minimumDate={new Date()}
+              onChange={onChangeDate}
+            />
+          )}
+        </DatePickerContainer>
 
-        <View flexDirection="row" gap="$10">
+        <TimePickerContainer>
           <View>
             <Text>Start time:</Text>
-            <Button onPress={() => setShowStartTimePicker(true)}>
+            <TimePickerButton
+              icon={Clock}
+              onPress={() => setShowStartTimePicker(true)}
+            >
               {formatDate(startTime.toISOString(), "timeonly")}
-            </Button>
+            </TimePickerButton>
             {showStartTimePicker && (
               <DateTimePicker
                 value={startTime}
                 mode={"time"}
                 display={"default"}
-                onChange={(event, selectedTime) => {
+                minuteInterval={5}
+                onChange={(_event, selectedTime) => {
+                  setShowStartTimePicker(false);
                   const currentDate = selectedTime || startTime;
                   setStartTime(currentDate);
-                  setShowStartTimePicker(false);
                 }}
               />
             )}
           </View>
           <View>
             <Text>End time:</Text>
-            <Button onPress={() => setShowEndTimePicker(true)}>
+            <TimePickerButton
+              icon={Clock}
+              onPress={() => setShowEndTimePicker(true)}
+            >
               {formatDate(endTime.toISOString(), "timeonly")}
-            </Button>
+            </TimePickerButton>
             {showEndTimePicker && (
               <DateTimePicker
                 value={endTime}
                 mode={"time"}
                 display={"default"}
-                onChange={(event, selectedTime) => {
+                minuteInterval={5}
+                onChange={(_event, selectedTime) => {
+                  setShowEndTimePicker(false);
                   const currentDate = selectedTime || endTime;
                   setEndTime(currentDate);
-                  setShowEndTimePicker(false);
                 }}
               />
             )}
           </View>
-        </View>
-      </View>
-      <Button
-        onPress={() => router.push(href)}
-        size={"$10"}
-        paddingHorizontal={"$2"}
-        marginVertical={"$8"}
-        marginHorizontal={"$8"}
-        borderRadius={"$4"}
-      >
-        <Text textAlign="center">Continue</Text>
-      </Button>
-    </View>
+        </TimePickerContainer>
+      </DateTimePickerContainer>
+      <ContinueContainer>
+        <ContinueButton onPress={() => router.push(href)}>
+          Continue
+        </ContinueButton>
+      </ContinueContainer>
+    </MainContainer>
   );
 }
+
+const MainContainer = styled(View, {
+  display: "flex",
+  flexDirection: "column",
+  marginTop: "$8",
+  marginHorizontal: "$3",
+});
+
+const DateTimePickerContainer = styled(View, {
+  width: "80%",
+});
+
+const DatePickerContainer = styled(View, {
+  gap: "$3",
+  marginBottom: "$6",
+});
+
+const DatePickerButton = styled(Button, {
+  justifyContent: "flex-start",
+});
+
+const TimePickerContainer = styled(View, {
+  flexDirection: "row",
+  justifyContent: "space-between",
+});
+
+const TimePickerButton = styled(Button, {
+  marginTop: "$3",
+  width: "$11",
+  justifyContent: "flex-start",
+});
+
+const ContinueContainer = styled(View, {
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: 400,
+});
+
+const ContinueButton = styled(Button, {
+  width: "$13",
+  backgroundColor: "$blue10",
+  color: "$white",
+  padding: "$1",
+  borderRadius: "$3",
+});
