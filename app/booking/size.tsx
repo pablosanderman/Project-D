@@ -3,8 +3,6 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import NavigationSelection from "@/components/NavigationSelection";
 import { useLayoutEffect } from "react";
 
-import { Text } from "tamagui";
-
 export default function RoomSize() {
   const { roomType } = useLocalSearchParams<{ roomType: string }>();
 
@@ -42,7 +40,7 @@ export default function RoomSize() {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Book a room",
+      title: "Choose room size",
     });
   }, [navigation]);
 

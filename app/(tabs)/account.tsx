@@ -1,5 +1,4 @@
-import { FlatList, StyleSheet } from "react-native";
-
+import { StyleSheet } from "react-native";
 import { trpc } from "@/utils/trpc";
 import { Text, Button, View } from "tamagui";
 import { Settings, Info } from "@tamagui/lucide-icons";

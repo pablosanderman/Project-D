@@ -6,7 +6,7 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-import { formatTime, formatDate } from "@/utils/converters";
+import { Converter } from "@/utils/converter";
 
 export default function DateTime() {
   const { roomType, roomSize } = useLocalSearchParams<{
@@ -45,7 +45,7 @@ export default function DateTime() {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Book a room",
+      title: "Choose date and time",
     });
   }, [navigation]);
 
@@ -53,12 +53,12 @@ export default function DateTime() {
     <MainContainer>
       <DateTimePickerContainer>
         <DatePickerContainer>
-          <Text>Date:</Text>
+          <Text>Date</Text>
           <DatePickerButton
             icon={Calendar}
             onPress={() => setShowDatePicker(true)}
           >
-            {formatDate(date.toISOString())}
+            {Converter.formatDate(date.toISOString())}
           </DatePickerButton>
           {showDatePicker && (
             <DateTimePicker
@@ -73,12 +73,12 @@ export default function DateTime() {
 
         <TimePickerContainer>
           <View>
-            <Text>Start time:</Text>
+            <Text>Start time</Text>
             <TimePickerButton
               icon={Clock}
               onPress={() => setShowStartTimePicker(true)}
             >
-              {formatTime(startTime.toISOString())}
+              {Converter.formatTime(startTime.toISOString())}
             </TimePickerButton>
             {showStartTimePicker && (
               <DateTimePicker
@@ -95,12 +95,12 @@ export default function DateTime() {
             )}
           </View>
           <View>
-            <Text>End time:</Text>
+            <Text>End time</Text>
             <TimePickerButton
               icon={Clock}
               onPress={() => setShowEndTimePicker(true)}
             >
-              {formatTime(endTime.toISOString())}
+              {Converter.formatTime(endTime.toISOString())}
             </TimePickerButton>
             {showEndTimePicker && (
               <DateTimePicker

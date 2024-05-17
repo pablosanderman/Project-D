@@ -15,6 +15,7 @@ import { TamaguiProvider } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
+
 export default function RootLayout() {
   const queryClient = new QueryClient();
   const trpcClient = trpc.createClient({

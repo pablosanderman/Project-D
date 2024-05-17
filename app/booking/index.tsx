@@ -32,7 +32,7 @@ export default function RoomType() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Book a room",
+      title: "Choose room type",
       headerBackTitle: "Home",
     });
   }, [navigation]);

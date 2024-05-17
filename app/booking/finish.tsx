@@ -1,11 +1,7 @@
-import { Button, View } from "tamagui";
+import { Button, View, styled } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
-import {
-  convertRoomSize,
-  convertRoomType,
-  formatDate,
-} from "@/utils/converters";
+import { Converter } from "@/utils/converter";
 
 import { Text } from "tamagui";
 import { CheckCircle2 } from "@tamagui/lucide-icons";
@@ -24,29 +20,30 @@ export default function Finish() {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Booking confirmed",
+      title: "Booking successfull",
     });
   }, [navigation]);
 
   return (
-    <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      <Text fontSize={"$7"}> {`Booking confirmed \n`}</Text>
-      <CheckCircle2 size={"$7"} alignSelf="center"></CheckCircle2>
-      <Text fontWeight={"bold"} alignSelf="center" fontSize={"$6"}>
-        {`Room Info \n`}
-      </Text>
-      <Text alignSelf="center">
-        {`Room: ${roomId}\nFloor: ${floor}\nRoom type: ${convertRoomType(
-          roomType!
-        )}\nCapacity: ${convertRoomSize(roomSize!)}\nTime: ${formatDate(
-          startTime!,
-          "timeonly"
-        )} - ${formatDate(endTime!, "timeonly")} ${formatDate(
-          startTime!,
-          "weekday"
-        )}`}
-      </Text>
-      <Button onPress={router.dismissAll}>Finish</Button>
-    </View>
+    <MainContainer>
+      <CheckCircle2 />
+
+      <FinishButton onPress={router.dismissAll}>Finish</FinishButton>
+    </MainContainer>
   );
 }
+
+const MainContainer = styled(View, {
+  display: "flex",
+  flexDirection: "column",
+  marginTop: "$8",
+  marginHorizontal: "$3",
+});
+
+const FinishButton = styled(Button, {
+  width: "$13",
+  backgroundColor: "$blue10",
+  color: "$white",
+  padding: "$1",
+  borderRadius: "$3",
+});

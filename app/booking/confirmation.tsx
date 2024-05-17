@@ -1,13 +1,8 @@
-import { Button, Text, View, styled } from "tamagui";
+import { Button, Text, View, AlertDialog, styled } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
-import {
-  convertRoomSize,
-  convertRoomType,
-  formatDate,
-  formatFromTimeToTime,
-} from "@/utils/converters";
+import { Converter } from "@/utils/converter";
 import {
   MapPin,
   LampDesk,
@@ -48,20 +43,20 @@ export default function Confirmation() {
   }, []);
   const [error, setError] = useState<string | null>(null);
 
+  const Name = recommendation.roomName;
+  const Type = Converter.convertRoomType(roomType);
+  const Date = Converter.formatDate(startTime);
+  const Time = Converter.formatFromTimeToTime(startTime, endTime);
+  const Size = Converter.convertRoomSize(roomSize);
+
   const mutation = trpc.booking.create.useMutation({
     onSuccess() {
-      setError(null); // clear any previous error
-      router.push("/booking/finish");
+      router.push(href);
     },
     onError(err) {
       setError(err.message);
     },
   });
-
-  const createBookingAndNavigate = async () => {
-    await createBooking();
-    router.navigate(href);
-  };
 
   const createBooking = async () => {
     await mutation.mutateAsync({
@@ -97,28 +92,26 @@ export default function Confirmation() {
       <InfoContainer>
         <InfoItem>
           <MapPin />
-          <Text>{recommendation.roomName}</Text>
+          <Text>{Name}</Text>
         </InfoItem>
         <InfoItem>
           <LampDesk />
-          <Text>{convertRoomType(roomType)}</Text>
+          <Text>{Type}</Text>
         </InfoItem>
         <InfoItem>
           <Calendar />
-          <Text>{formatDate(startTime)}</Text>
+          <Text>{Date}</Text>
         </InfoItem>
         <InfoItem>
           <Clock />
-          <Text>{formatFromTimeToTime(startTime, endTime)}</Text>
+          <Text>{Time}</Text>
         </InfoItem>
         <InfoItem>
           <Users />
-          <Text>{convertRoomSize(roomSize)}</Text>
+          <Text>{Size}</Text>
         </InfoItem>
       </InfoContainer>
-      <ConfirmBooking onPress={createBookingAndNavigate}>
-        Confirm booking
-      </ConfirmBooking>
+      <ConfirmBooking onPress={createBooking}>Confirm booking</ConfirmBooking>
       {error && <Text>Error: {error}</Text>}
     </MainContainer>
   );
