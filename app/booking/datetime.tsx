@@ -7,6 +7,7 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 
 import { Converter } from "@/utils/converter";
+import { set } from "zod";
 
 export default function DateTime() {
   const { roomType, roomSize } = useLocalSearchParams<{
@@ -40,6 +41,36 @@ export default function DateTime() {
     setShowDatePicker(false);
     const currentDate = selectedDate || date;
     setDate(currentDate);
+  };
+
+  const onChangeTime = (
+    event: DateTimePickerEvent,
+    selectedTime: Date | undefined,
+    isStartTime: boolean
+  ) => {
+    const currentTime = selectedTime || (isStartTime ? startTime : endTime);
+
+    if (isStartTime) {
+      setShowStartTimePicker(false);
+      const newStartTime = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        currentTime.getHours(),
+        currentTime.getMinutes()
+      );
+      setStartTime(newStartTime);
+    } else {
+      setShowEndTimePicker(false);
+      const newEndTime = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        currentTime.getHours(),
+        currentTime.getMinutes()
+      );
+      setEndTime(newEndTime);
+    }
   };
 
   const navigation = useNavigation();
@@ -86,11 +117,9 @@ export default function DateTime() {
                 mode={"time"}
                 display={"default"}
                 minuteInterval={5}
-                onChange={(_event, selectedTime) => {
-                  setShowStartTimePicker(false);
-                  const currentDate = selectedTime || startTime;
-                  setStartTime(currentDate);
-                }}
+                onChange={(event, selectedTime) =>
+                  onChangeTime(event, selectedTime, true)
+                }
               />
             )}
           </View>
@@ -108,11 +137,9 @@ export default function DateTime() {
                 mode={"time"}
                 display={"default"}
                 minuteInterval={5}
-                onChange={(_event, selectedTime) => {
-                  setShowEndTimePicker(false);
-                  const currentDate = selectedTime || endTime;
-                  setEndTime(currentDate);
-                }}
+                onChange={(event, selectedTime) =>
+                  onChangeTime(event, selectedTime, false)
+                }
               />
             )}
           </View>

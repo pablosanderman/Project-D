@@ -85,6 +85,7 @@ export default function Confirmation() {
   return (
     <MainContainer>
       <InfoContainer>
+        <Header>Booking details</Header>
         <InfoItem>
           <MapPin />
           <Text>{Name}</Text>
@@ -141,9 +142,7 @@ export default function Confirmation() {
           >
             <YStack>
               <AlertDialog.Title>Booking created</AlertDialog.Title>
-
               <CheckCircle alignSelf="center" marginVertical="$7" size="$12" />
-
               <XStack justifyContent="center">
                 <AlertDialog.Action asChild>
                   <OkayButton onPress={router.dismissAll}>OK</OkayButton>
@@ -161,13 +160,22 @@ export default function Confirmation() {
 const MainContainer = styled(View, {
   display: "flex",
   flexDirection: "column",
-  marginTop: "$8",
+  alignItems: "center",
+  marginTop: "$15",
   marginHorizontal: "$3",
 });
 
 const InfoContainer = styled(View, {
   display: "flex",
   flexDirection: "column",
+  gap: "$2",
+  padding: "$10",
+  marginBottom: "$4",
+});
+
+const Header = styled(Text, {
+  fontSize: "$8",
+  fontWeight: "bold",
   marginBottom: "$4",
 });
 
@@ -185,6 +193,7 @@ const ConfirmBooking = styled(Button, {
   color: "$white",
   padding: "$1",
   borderRadius: "$3",
+  marginTop: "$15",
 });
 
 const OkayButton = styled(Button, {
