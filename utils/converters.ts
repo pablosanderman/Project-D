@@ -38,3 +38,31 @@ export const formatDate = (
   }
   return formattedDate;
 };
+
+export const convertRoomType = (type: string): string => {
+  switch (type) {
+    case "MEETING":
+      return "Meeting Room";
+    case "FOCUS":
+      return "Focus Room";
+    case "DESK":
+      return "Desk";
+    default:
+      return "Room type not given";
+  }
+};
+
+export const convertRoomSize = (size: string): string => {
+  switch (size) {
+    case "ONE_TO_TWO":
+      return "One to two people";
+    case "TWO_TO_FOUR":
+      return "Two to four people";
+    case "FOUR_TO_EIGHT":
+      return "Four to eight people";
+    case "EIGHT_TO_SIXTEEN":
+      return "Eight to sixteen people";
+    default:
+      return "Room size not given";
+  }
+};

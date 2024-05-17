@@ -2,9 +2,14 @@ import { Button, View } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
-import { formatDate } from "@/utils/converters";
+import {
+  convertRoomSize,
+  formatDate,
+  convertRoomType,
+} from "@/utils/converters";
 
 import { Text } from "tamagui";
+import { CheckCircle, CheckCircle2 } from "@tamagui/lucide-icons";
 
 export default function Confirmation() {
   const { roomType, roomSize, startTime, endTime } = useLocalSearchParams<{
@@ -49,7 +54,7 @@ export default function Confirmation() {
 
   const createBookingAndNavigate = async () => {
     await createBooking();
-    router.push(href);
+    router.navigate(href);
   };
 
   const href = {
@@ -73,24 +78,39 @@ export default function Confirmation() {
 
   return (
     <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      <Text>
-        {`(debug parameters)\n\ntype:    ${roomType}\nsize:    ${roomSize}\ncurrent time:    ${new Date().toISOString()}`}
-      </Text>
       {recommendation && (
-        <Text>
-          {`\n\n\n\nRoom Info\n\nRoom number: ${
-            recommendation.roomId
-          }\nType of room : ${roomType}\nFloor: ${
-            recommendation.floor
-          }\nTime: ${formatDate(startTime!, "timeonly")} - ${formatDate(
-            endTime!,
-            "timeonly"
-          )}`}{" "}
-          {formatDate(startTime!, "weekday")}
-        </Text>
+        <View alignSelf="center">
+          <Text></Text>
+          <Text fontWeight={"bold"} alignSelf="center" fontSize={"$6"}>
+            Room Info
+          </Text>
+        </View>
       )}
-      <Button onPress={createBookingAndNavigate}>Confirm booking</Button>
+      <Text marginLeft={"$3"}>
+        {`\nRoom number: \n${
+          recommendation.roomId
+        }\n \nType of room:\n${convertRoomType(roomType!)}\n\nFloor:\n${
+          recommendation.floor
+        }\n\nTime:\n${formatDate(startTime!, "timeonly")} - ${formatDate(
+          endTime!,
+          "timeonly"
+        )} ${formatDate(
+          startTime!,
+          "weekday"
+        )}\n\nRoom capacity:\n${convertRoomSize(roomSize!)} \n`}{" "}
+      </Text>
+      <Text>
+        {`\n(debug parameters)\ntype:    ${roomType}\nsize:    ${roomSize}\ncurrent time:    ${new Date().toISOString()}`}
+      </Text>
       {error && <Text>Error: {error}</Text>}
+
+      <Button
+        onPress={createBookingAndNavigate}
+        width={"$20"}
+        alignSelf="center"
+      >
+        Confirm booking
+      </Button>
     </View>
   );
 }

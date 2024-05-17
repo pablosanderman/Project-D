@@ -1,15 +1,28 @@
-import { Button, FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 import { trpc } from "@/utils/trpc";
-import { Text, View } from "tamagui";
+import { Text, Button, View } from "tamagui";
+import { Settings, Info } from "@tamagui/lucide-icons";
 
 export default function AccountScreen() {
   const user = trpc.user.get.useQuery(1);
-
   return (
     <View style={styles.container}>
       <Text style={styles.separator}></Text>
-      {user.data && <Text style={styles.title}>{user.data.name}</Text>}
+      {user.data && (
+        <View>
+          <Text style={styles.title}>{user.data.name?.split(" ")[0]}</Text>
+          <Text style={styles.title}>{user.data.name?.split(" ")[1]}</Text>
+        </View>
+      )}
+      <View gap={"$3"}>
+        <Button>
+          <Settings></Settings>Settings
+        </Button>
+        <Button>
+          <Info></Info>About the app
+        </Button>
+      </View>
     </View>
   );
 }
