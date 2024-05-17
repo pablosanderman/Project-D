@@ -11,7 +11,7 @@ import { SplashScreen, Stack } from "expo-router";
 
 import { useColorScheme } from "react-native";
 
-import { TamaguiProvider } from "tamagui";
+import { TamaguiProvider, PortalProvider } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
@@ -48,10 +48,15 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-            </Stack>
+            <PortalProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="modal"
+                  options={{ presentation: "modal" }}
+                />
+              </Stack>
+            </PortalProvider>
           </QueryClientProvider>
         </trpc.Provider>
       </ThemeProvider>

@@ -1,9 +1,7 @@
 import { Button, View, styled } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
-import { Converter } from "@/utils/converter";
 
-import { Text } from "tamagui";
 import { CheckCircle2 } from "@tamagui/lucide-icons";
 
 export default function Finish() {

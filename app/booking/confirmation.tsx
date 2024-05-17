@@ -1,4 +1,12 @@
-import { Button, Text, View, AlertDialog, styled } from "tamagui";
+import {
+  Button,
+  Text,
+  View,
+  AlertDialog,
+  styled,
+  XStack,
+  YStack,
+} from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
@@ -9,6 +17,7 @@ import {
   Calendar,
   Clock,
   Users,
+  CheckCircle,
 } from "@tamagui/lucide-icons";
 
 function RecommendRoom() {
@@ -50,9 +59,7 @@ export default function Confirmation() {
   const Size = Converter.convertRoomSize(roomSize);
 
   const mutation = trpc.booking.create.useMutation({
-    onSuccess() {
-      router.push(href);
-    },
+    onSuccess() {},
     onError(err) {
       setError(err.message);
     },
@@ -66,18 +73,6 @@ export default function Confirmation() {
       roomId: recommendation.roomId,
       status: "UPCOMING",
     });
-  };
-
-  const href = {
-    pathname: "/booking/finish",
-    params: {
-      roomType: roomType,
-      roomSize: roomSize,
-      startTime: startTime,
-      endTime: endTime,
-      roomId: recommendation.roomId.toString(),
-      floor: recommendation.floor.toString(),
-    },
   };
 
   const navigation = useNavigation();
@@ -111,7 +106,53 @@ export default function Confirmation() {
           <Text>{Size}</Text>
         </InfoItem>
       </InfoContainer>
-      <ConfirmBooking onPress={createBooking}>Confirm booking</ConfirmBooking>
+      <AlertDialog>
+        <AlertDialog.Trigger asChild>
+          <ConfirmBooking onPress={createBooking}>
+            Confirm booking
+          </ConfirmBooking>
+        </AlertDialog.Trigger>
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay
+            key="overlay"
+            animation="quick"
+            opacity={0.5}
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+          <AlertDialog.Content
+            bordered
+            elevate
+            key="content"
+            animation={[
+              "quick",
+              {
+                opacity: {
+                  overshootClamping: true,
+                },
+              },
+            ]}
+            enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+            exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+            x={0}
+            scale={1}
+            opacity={1}
+            y={0}
+          >
+            <YStack>
+              <AlertDialog.Title>Booking created</AlertDialog.Title>
+
+              <CheckCircle alignSelf="center" marginVertical="$7" size="$12" />
+
+              <XStack justifyContent="center">
+                <AlertDialog.Action asChild>
+                  <OkayButton onPress={router.dismissAll}>OK</OkayButton>
+                </AlertDialog.Action>
+              </XStack>
+            </YStack>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog>
       {error && <Text>Error: {error}</Text>}
     </MainContainer>
   );
@@ -140,6 +181,14 @@ const InfoItem = styled(View, {
 
 const ConfirmBooking = styled(Button, {
   width: "$13",
+  backgroundColor: "$blue10",
+  color: "$white",
+  padding: "$1",
+  borderRadius: "$3",
+});
+
+const OkayButton = styled(Button, {
+  width: "$10",
   backgroundColor: "$blue10",
   color: "$white",
   padding: "$1",
