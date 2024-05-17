@@ -1,12 +1,11 @@
 import { Button, View } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 import {
   convertRoomSize,
   convertRoomType,
   formatDate,
 } from "@/utils/converters";
-import { trpc } from "@/utils/trpc";
 
 import { Text } from "tamagui";
 import { CheckCircle2 } from "@tamagui/lucide-icons";
@@ -26,7 +25,6 @@ export default function Finish() {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Booking confirmed",
-      headerbackVisible: false,
     });
   }, [navigation]);
 
@@ -47,9 +45,6 @@ export default function Finish() {
           startTime!,
           "weekday"
         )}`}
-      </Text>
-      <Text>
-        {`\n(debug parameters)\n\ntype:    ${roomType}\nsize:    ${roomSize}\ntime:    ${new Date().toISOString()}`}
       </Text>
       <Button onPress={router.dismissAll}>Finish</Button>
     </View>

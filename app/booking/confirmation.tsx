@@ -1,15 +1,29 @@
-import { Button, View } from "tamagui";
+import { Button, Text, View, styled } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import {
   convertRoomSize,
-  formatDate,
   convertRoomType,
+  formatDate,
+  formatFromTimeToTime,
 } from "@/utils/converters";
+import {
+  MapPin,
+  LampDesk,
+  Calendar,
+  Clock,
+  Users,
+} from "@tamagui/lucide-icons";
 
-import { Text } from "tamagui";
-import { CheckCircle, CheckCircle2 } from "@tamagui/lucide-icons";
+function RecommendRoom() {
+  // placeholder function
+  return {
+    roomId: 50,
+    roomName: "PL 05.18",
+    floor: 1,
+  };
+}
 
 export default function Confirmation() {
   const { roomType, roomSize, startTime, endTime } = useLocalSearchParams<{
@@ -17,20 +31,22 @@ export default function Confirmation() {
     roomSize: string;
     startTime: string;
     endTime: string;
-  }>();
-  const recommendation = {
-    roomId: 0,
-    floor: 0,
+  }>() as {
+    roomType: string;
+    roomSize: string;
+    startTime: string;
+    endTime: string;
   };
-  const [error, setError] = useState<string | null>(null);
-
+  const [recommendation, setRecommendation] = useState({
+    roomId: 0,
+    roomName: "",
+    floor: 0,
+  });
   useEffect(() => {
-    (async () => {
-      // recommend booking function placeholders
-      recommendation.roomId = 50;
-      recommendation.floor = 1;
-    })();
+    const recommendedRoom = RecommendRoom();
+    setRecommendation(recommendedRoom);
   }, []);
+  const [error, setError] = useState<string | null>(null);
 
   const mutation = trpc.booking.create.useMutation({
     onSuccess() {
@@ -42,6 +58,11 @@ export default function Confirmation() {
     },
   });
 
+  const createBookingAndNavigate = async () => {
+    await createBooking();
+    router.navigate(href);
+  };
+
   const createBooking = async () => {
     await mutation.mutateAsync({
       userId: 1,
@@ -52,20 +73,15 @@ export default function Confirmation() {
     });
   };
 
-  const createBookingAndNavigate = async () => {
-    await createBooking();
-    router.navigate(href);
-  };
-
   const href = {
     pathname: "/booking/finish",
     params: {
-      roomType: roomType as string,
-      roomSize: roomSize as string,
+      roomType: roomType,
+      roomSize: roomSize,
       startTime: startTime,
       endTime: endTime,
-      roomId: recommendation.roomId,
-      floor: recommendation.floor,
+      roomId: recommendation.roomId.toString(),
+      floor: recommendation.floor.toString(),
     },
   };
 
@@ -77,40 +93,62 @@ export default function Confirmation() {
   }, [navigation]);
 
   return (
-    <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      {recommendation && (
-        <View alignSelf="center">
-          <Text></Text>
-          <Text fontWeight={"bold"} alignSelf="center" fontSize={"$6"}>
-            Room Info
-          </Text>
-        </View>
-      )}
-      <Text marginLeft={"$3"}>
-        {`\nRoom number: \n${
-          recommendation.roomId
-        }\n \nType of room:\n${convertRoomType(roomType!)}\n\nFloor:\n${
-          recommendation.floor
-        }\n\nTime:\n${formatDate(startTime!, "timeonly")} - ${formatDate(
-          endTime!,
-          "timeonly"
-        )} ${formatDate(
-          startTime!,
-          "weekday"
-        )}\n\nRoom capacity:\n${convertRoomSize(roomSize!)} \n`}{" "}
-      </Text>
-      <Text>
-        {`\n(debug parameters)\ntype:    ${roomType}\nsize:    ${roomSize}\ncurrent time:    ${new Date().toISOString()}`}
-      </Text>
-      {error && <Text>Error: {error}</Text>}
-
-      <Button
-        onPress={createBookingAndNavigate}
-        width={"$20"}
-        alignSelf="center"
-      >
+    <MainContainer>
+      <InfoContainer>
+        <InfoItem>
+          <MapPin />
+          <Text>{recommendation.roomName}</Text>
+        </InfoItem>
+        <InfoItem>
+          <LampDesk />
+          <Text>{convertRoomType(roomType)}</Text>
+        </InfoItem>
+        <InfoItem>
+          <Calendar />
+          <Text>{formatDate(startTime)}</Text>
+        </InfoItem>
+        <InfoItem>
+          <Clock />
+          <Text>{formatFromTimeToTime(startTime, endTime)}</Text>
+        </InfoItem>
+        <InfoItem>
+          <Users />
+          <Text>{convertRoomSize(roomSize)}</Text>
+        </InfoItem>
+      </InfoContainer>
+      <ConfirmBooking onPress={createBookingAndNavigate}>
         Confirm booking
-      </Button>
-    </View>
+      </ConfirmBooking>
+      {error && <Text>Error: {error}</Text>}
+    </MainContainer>
   );
 }
+
+const MainContainer = styled(View, {
+  display: "flex",
+  flexDirection: "column",
+  marginTop: "$8",
+  marginHorizontal: "$3",
+});
+
+const InfoContainer = styled(View, {
+  display: "flex",
+  flexDirection: "column",
+  marginBottom: "$4",
+});
+
+const InfoItem = styled(View, {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  marginBottom: "$2",
+  gap: "$2",
+});
+
+const ConfirmBooking = styled(Button, {
+  width: "$13",
+  backgroundColor: "$blue10",
+  color: "$white",
+  padding: "$1",
+  borderRadius: "$3",
+});

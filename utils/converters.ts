@@ -1,43 +1,41 @@
 import { getLocales } from "expo-localization";
 
-type choice = "timeonly" | "date" | "datetime" | "weekday";
 const locales = getLocales();
 const deviceLanguage = locales[0].languageTag;
-export const formatDate = (
-  dateString: string,
-  custom: choice,
-  locale: string = deviceLanguage === "nl-NL" ? deviceLanguage : "en-US"
-): string => {
+const locale: string = deviceLanguage === "nl-NL" ? deviceLanguage : "en-US";
+
+export function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  let formattedDate: string = "";
-  if (custom === "timeonly") {
-    formattedDate = date.toLocaleTimeString(locale, {
-      hour: "numeric",
-      minute: "numeric",
-    });
-  } else if (custom === "datetime") {
-    formattedDate = date.toLocaleString(locale, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    });
-  } else if (custom === "date") {
-    formattedDate = date.toLocaleDateString(locale, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  } else if (custom === "weekday") {
-    formattedDate = date.toLocaleDateString(locale, {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-    });
-  }
-  return formattedDate;
-};
+  return date.toLocaleDateString(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+export function formatTime(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString(locale, {
+    hour: "numeric",
+    minute: "numeric",
+  });
+}
+
+export function formatWeekday(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(locale, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+export function formatFromTimeToTime(
+  dateStringFrom: string,
+  dateStringTo: string
+): string {
+  return `${formatTime(dateStringFrom)} - ${formatTime(dateStringTo)}`;
+}
 
 export const convertRoomType = (type: string): string => {
   switch (type) {
@@ -55,13 +53,13 @@ export const convertRoomType = (type: string): string => {
 export const convertRoomSize = (size: string): string => {
   switch (size) {
     case "ONE_TO_TWO":
-      return "One to two people";
+      return "1-2";
     case "TWO_TO_FOUR":
-      return "Two to four people";
+      return "2-4";
     case "FOUR_TO_EIGHT":
-      return "Four to eight people";
+      return "4-8";
     case "EIGHT_TO_SIXTEEN":
-      return "Eight to sixteen people";
+      return "8-16";
     default:
       return "Room size not given";
   }

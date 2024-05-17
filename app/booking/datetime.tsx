@@ -6,7 +6,7 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-import { formatDate } from "@/utils/converters";
+import { formatTime, formatDate } from "@/utils/converters";
 
 export default function DateTime() {
   const { roomType, roomSize } = useLocalSearchParams<{
@@ -22,8 +22,6 @@ export default function DateTime() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
-
-  let isUnpressable = false;
 
   const href = {
     pathname: "/booking/confirmation",
@@ -60,7 +58,7 @@ export default function DateTime() {
             icon={Calendar}
             onPress={() => setShowDatePicker(true)}
           >
-            {formatDate(date.toISOString(), "date")}
+            {formatDate(date.toISOString())}
           </DatePickerButton>
           {showDatePicker && (
             <DateTimePicker
@@ -80,7 +78,7 @@ export default function DateTime() {
               icon={Clock}
               onPress={() => setShowStartTimePicker(true)}
             >
-              {formatDate(startTime.toISOString(), "timeonly")}
+              {formatTime(startTime.toISOString())}
             </TimePickerButton>
             {showStartTimePicker && (
               <DateTimePicker
@@ -102,7 +100,7 @@ export default function DateTime() {
               icon={Clock}
               onPress={() => setShowEndTimePicker(true)}
             >
-              {formatDate(endTime.toISOString(), "timeonly")}
+              {formatTime(endTime.toISOString())}
             </TimePickerButton>
             {showEndTimePicker && (
               <DateTimePicker
