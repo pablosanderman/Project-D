@@ -2,7 +2,7 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
-import { Bean, History, Home, User } from "@tamagui/lucide-icons";
+import { History, Home, LogIn, SquarePen, User } from "@tamagui/lucide-icons";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -52,6 +52,20 @@ export default function TabLayout() {
         options={{
           title: "Account",
           tabBarIcon: ({ color }) => <User color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="Sign-up"
+        options={{
+          title: "Sign up",
+          tabBarIcon: ({ color }) => <SquarePen color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="LoginScreen"
+        options={{
+          title: "Login",
+          tabBarIcon: ({ color }) => <LogIn color={color} />,
         }}
       />
     </Tabs>

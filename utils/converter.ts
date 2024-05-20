@@ -40,6 +40,21 @@ export class Converter {
     )}`;
   }
 
+  static convertBookingStatus(status: string): string {
+    switch (status) {
+      case "UPCOMING":
+        return "Upcoming";
+      case "CANCELLED":
+        return "Cancelled";
+      case "CONFIRMED":
+        return "Confirmed";
+      case "IN_PROGRESS":
+        return "In progress";
+      default:
+        return "Status not given";
+    }
+  }
+
   static convertRoomType(type: string): string {
     switch (type) {
       case "MEETING":
