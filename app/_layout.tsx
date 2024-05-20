@@ -6,6 +6,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import "react-native-gesture-handler";
 
 import { SplashScreen, Stack } from "expo-router";
 
