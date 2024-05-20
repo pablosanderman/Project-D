@@ -1,13 +1,11 @@
 import { StyleSheet } from "react-native";
-
 import { Text, View, Button } from "tamagui";
 import { trpc } from "@/utils/trpc";
 import { router } from "expo-router";
 import { $Enums } from "@prisma/client";
-import { formatDate } from "@/utils/converters";
+import { Converter } from "@/utils/converter";
 
 export default function HomeScreen() {
-  const utils = trpc.useUtils();
   const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
   let data: {
     userId: number;
@@ -31,40 +29,12 @@ export default function HomeScreen() {
   if (query.data) {
     data = query.data;
   }
-  //   // Function to split the string into month and day
-  //   function splitDate(dateString: string): { month: number, day: number } {
-  //     const date = new Date(dateString);
-  //     const month = date.getMonth() + 1; // Months are zero-based, so we add 1
-  //     const day = date.getDate();
-  //     return { month, day };
-  // }
-
-  // // Function to extract hours and minutes
-  //   function extractTime(dateString: string): { hours: number, minutes: number } {
-  //     const date = new Date(dateString);
-  //     const hours = date.getHours();
-  //     const minutes = date.getMinutes();
-  //     return { hours, minutes };
-  //   }
 
   const dateString = data.startTime;
   const enddatesString = data.endTime;
-  const startTime = formatDate(dateString, "nl-NL");
-  const endTime = formatDate(enddatesString, "nl-NL");
-  const mutation = trpc.booking.create.useMutation({
-    onSuccess(input) {
-      utils.booking.invalidate();
-    },
-  });
-  const createBooking = () => {
-    mutation.mutate({
-      userId: 1,
-      startTime: new Date().toISOString(),
-      endTime: new Date().toISOString(),
-      roomId: 1,
-      status: "UPCOMING",
-    });
-  };
+  const startTime = Converter.formatDate(dateString);
+  const endTime = Converter.formatDate(enddatesString);
+
   return (
     <View style={{}}>
       <Button

@@ -1,52 +1,78 @@
-import { Button, View } from "tamagui";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import {
+  Button,
+  Text,
+  View,
+  AlertDialog,
+  styled,
+  XStack,
+  YStack,
+} from "tamagui";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
-import { RoomType, RoomSize, Booking, Room } from "@prisma/client";
+import { Converter } from "@/utils/converter";
+import {
+  MapPin,
+  LampDesk,
+  Calendar,
+  Clock,
+  Users,
+  CheckCircle,
+} from "@tamagui/lucide-icons";
 
-import { Text } from "tamagui";
+function RecommendRoom() {
+  // placeholder function
+  return {
+    roomId: 50,
+    roomName: "PL 05.18",
+    floor: 1,
+  };
+}
 
 export default function Confirmation() {
-  const [newBooking, setNewBooking] = useState<Booking | null>(null);
-  useEffect(() => {
-    (async () => {
-      createBooking();
-    })();
-  }, []);
-
-  const { roomType, size } = useLocalSearchParams<{
+  const { roomType, roomSize, startTime, endTime } = useLocalSearchParams<{
     roomType: string;
-    size: string;
-  }>();
+    roomSize: string;
+    startTime: string;
+    endTime: string;
+  }>() as {
+    roomType: string;
+    roomSize: string;
+    startTime: string;
+    endTime: string;
+  };
+  const [recommendation, setRecommendation] = useState({
+    roomId: 0,
+    roomName: "",
+    floor: 0,
+  });
+  useEffect(() => {
+    const recommendedRoom = RecommendRoom();
+    setRecommendation(recommendedRoom);
+  }, []);
+  const [error, setError] = useState<string | null>(null);
 
-  const utils = trpc.useUtils();
+  const Name = recommendation.roomName;
+  const Type = Converter.convertRoomType(roomType);
+  const Date = Converter.formatDate(startTime);
+  const Time = Converter.formatFromTimeToTime(startTime, endTime);
+  const Size = Converter.convertRoomSize(roomSize);
 
   const mutation = trpc.booking.create.useMutation({
-    onSuccess() {
-      utils.booking.invalidate(); // refresh cache
+    onSuccess() {},
+    onError(err) {
+      setError(err.message);
     },
   });
 
-  // create a demo booking with IN_PROGRESS status
-  // Hardcoded values for demonstration purposes: userId: 1, roomId: 50
   const createBooking = async () => {
-    const booking = await mutation.mutateAsync({
+    await mutation.mutateAsync({
       userId: 1,
-      startTime: new Date().toISOString(),
-      endTime: new Date().toISOString(),
-      roomId: 50,
-      status: "IN_PROGRESS",
+      startTime: startTime as string,
+      endTime: endTime as string,
+      roomId: recommendation.roomId,
+      status: "UPCOMING",
     });
-
-    const formattedBooking = {
-      ...booking,
-      startTime: new Date(booking.startTime),
-      endTime: new Date(booking.endTime),
-      createdAt: new Date(booking.createdAt),
-      updatedAt: new Date(booking.updatedAt),
-    };
-
-    setNewBooking(formattedBooking);
   };
 
   const navigation = useNavigation();
@@ -57,15 +83,123 @@ export default function Confirmation() {
   }, [navigation]);
 
   return (
-    <View marginTop={"$8"} paddingHorizontal={"$2"}>
-      <Text>
-        {`(debug parameters)\n\ntype:    ${roomType}\nsize:    ${size}\ntime:    ${new Date().toISOString()}`}
-      </Text>
-      {newBooking && (
-        <Text>
-          {`\n\n\n\nRoom Info\n\nroom: *room name*\ntype: *roomType*\nsize: *roomSize*\nstart:   ${newBooking.startTime}\nend:     ${newBooking.endTime}`}
-        </Text>
-      )}
-    </View>
+    <MainContainer>
+      <InfoContainer>
+        <Header>Booking details</Header>
+        <InfoItem>
+          <MapPin />
+          <Text>{Name}</Text>
+        </InfoItem>
+        <InfoItem>
+          <LampDesk />
+          <Text>{Type}</Text>
+        </InfoItem>
+        <InfoItem>
+          <Calendar />
+          <Text>{Date}</Text>
+        </InfoItem>
+        <InfoItem>
+          <Clock />
+          <Text>{Time}</Text>
+        </InfoItem>
+        <InfoItem>
+          <Users />
+          <Text>{Size}</Text>
+        </InfoItem>
+      </InfoContainer>
+      <AlertDialog>
+        <AlertDialog.Trigger asChild>
+          <ConfirmBooking onPress={createBooking}>
+            Confirm booking
+          </ConfirmBooking>
+        </AlertDialog.Trigger>
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay
+            key="overlay"
+            animation="quick"
+            opacity={0.5}
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+          <AlertDialog.Content
+            bordered
+            elevate
+            key="content"
+            animation={[
+              "quick",
+              {
+                opacity: {
+                  overshootClamping: true,
+                },
+              },
+            ]}
+            enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+            exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+            x={0}
+            scale={1}
+            opacity={1}
+            y={0}
+          >
+            <YStack>
+              <AlertDialog.Title>Booking created</AlertDialog.Title>
+              <CheckCircle alignSelf="center" marginVertical="$7" size="$12" />
+              <XStack justifyContent="center">
+                <AlertDialog.Action asChild>
+                  <OkayButton onPress={router.dismissAll}>OK</OkayButton>
+                </AlertDialog.Action>
+              </XStack>
+            </YStack>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog>
+      {error && <Text>Error: {error}</Text>}
+    </MainContainer>
   );
 }
+
+const MainContainer = styled(View, {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginTop: "$15",
+  marginHorizontal: "$3",
+});
+
+const InfoContainer = styled(View, {
+  display: "flex",
+  flexDirection: "column",
+  gap: "$2",
+  padding: "$10",
+  marginBottom: "$4",
+});
+
+const Header = styled(Text, {
+  fontSize: "$8",
+  fontWeight: "bold",
+  marginBottom: "$4",
+});
+
+const InfoItem = styled(View, {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  marginBottom: "$2",
+  gap: "$2",
+});
+
+const ConfirmBooking = styled(Button, {
+  width: "$13",
+  backgroundColor: "$blue10",
+  color: "$white",
+  padding: "$1",
+  borderRadius: "$3",
+  marginTop: "$15",
+});
+
+const OkayButton = styled(Button, {
+  width: "$10",
+  backgroundColor: "$blue10",
+  color: "$white",
+  padding: "$1",
+  borderRadius: "$3",
+});
