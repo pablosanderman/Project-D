@@ -1,7 +1,7 @@
 import { router, publicProcedure, createCallerFactory } from "../trpc";
 import z from "zod";
 import prisma from "@/utils/prisma";
-import { BookingStatus, RoomSize, RoomType } from "@prisma/client";
+import { BookingStatus } from "@prisma/client";
 
 export const bookingRouter = router({
   create: publicProcedure
