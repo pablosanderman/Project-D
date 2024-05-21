@@ -51,7 +51,7 @@ export default function HomeScreen() {
     //filter rooms that are not booked at the desired time
     const availableRooms = rooms.filter((room) => {
       const overlappingBooking = bookings.find(
-        (booking) => booking.roomId === room.id,
+        (booking) => booking.roomId === room.id
         // booking.startTime < new Date().toISOString() &&
         // booking.endTime > new Date().toISOString()
       );
@@ -113,7 +113,7 @@ export default function HomeScreen() {
         marginLeft={10}
         onPress={() => router.push("/booking/")}
       >
-        book a room
+        Book a room
       </Button>
       <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
     </View>

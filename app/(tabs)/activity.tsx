@@ -66,7 +66,7 @@ export default function ActivityScreen() {
                       backgroundColor={"grey"}
                     >
                       <Separator />
-                      <Text>Kamer {item.roomId}</Text>
+                      <Text>Room {item.roomId}</Text>
                       <Text>
                         At{" "}
                         <Text fontWeight={"bold"}>
