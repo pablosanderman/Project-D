@@ -43,12 +43,12 @@ export default function Navigation() {
       translationX.value = clamp(
         prevTranslationX.value + event.translationX,
         -maxTranslateX,
-        maxTranslateX,
+        maxTranslateX
       );
       translationY.value = clamp(
         prevTranslationY.value + event.translationY,
         -maxTranslateY,
-        maxTranslateY,
+        maxTranslateY
       );
     })
     .runOnJS(true);
@@ -66,7 +66,7 @@ export default function Navigation() {
     </GestureHandlerRootView>
   );
 }
-
+// todo: fix the styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,

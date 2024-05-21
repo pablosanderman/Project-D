@@ -1,11 +1,8 @@
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
-import type { CardProps } from "tamagui";
 import {
   ListItem,
-  Card,
   Button,
   Separator,
   XStack,
@@ -13,9 +10,6 @@ import {
   styled,
   Text,
   View,
-  H2,
-  Paragraph,
-  Image,
 } from "tamagui";
 
 import { inferRouterOutputs } from "@trpc/server";
@@ -38,7 +32,7 @@ export default function ActivityScreen() {
   // }
 
   return (
-    <View style={styles.container}>
+    <StyledContainer>
       {query.data && (
         <View>
           <View>
@@ -65,7 +59,7 @@ export default function ActivityScreen() {
                       marginBottom={"$2"}
                       backgroundColor={"grey"}
                     >
-                      <Separator />
+                      <StyledSeparator />
                       <Text>Room {item.roomId}</Text>
                       <Text>
                         At{" "}
@@ -94,23 +88,18 @@ export default function ActivityScreen() {
         </View>
       )}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
-    </View>
+    </StyledContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
+const StyledContainer = styled(View, {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+const StyledSeparator = styled(Separator, {
+  marginVertical: "$2",
+  height: 1,
+  width: "80%",
 });

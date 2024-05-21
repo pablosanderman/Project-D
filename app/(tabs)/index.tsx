@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native";
-import { Text, View, Button } from "tamagui";
+import { Text, View, Button, styled } from "tamagui";
 import { trpc } from "@/utils/trpc";
 import { router } from "expo-router";
 import { $Enums } from "@prisma/client";
@@ -80,21 +79,10 @@ export default function HomeScreen() {
 
   return (
     <View style={{}}>
-      <Button
-        size="$10"
-        elevation={"$6"}
-        shadowColor={"black"}
-        padding={"none"}
-        marginBottom={10}
-        marginTop={0}
-        marginLeft={10}
-        height={200}
-        width={350}
-        backgroundColor="darkgrey"
-      >
+      <StyledButton>
         <View justifyContent="center">
           <View>
-            <Text style={styles.title}>Booking</Text>
+            <StyledTitle>Booking</StyledTitle>
             <Text width={75}>Room {data?.roomId}</Text>
           </View>
           <View>
@@ -102,27 +90,39 @@ export default function HomeScreen() {
             <Text>End: {endTime}</Text>
           </View>
         </View>
-      </Button>
-      <Button
-        size="$7"
-        backgroundColor="grey"
-        width={350}
-        shadowColor={"$orange2Dark"}
-        shadowOpacity={80}
-        elevation={"$6"}
-        marginLeft={10}
-        onPress={() => router.push("/booking/")}
-      >
+      </StyledButton>
+      <StyledBookingButton onPress={() => router.push("/booking/")}>
         Book a room
-      </Button>
+      </StyledBookingButton>
       <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+const StyledTitle = styled(Text, {
+  fontSize: 20,
+  fontWeight: "bold",
+});
+
+const StyledButton = styled(Button, {
+  size: "$10",
+  elevation: "$6",
+  shadowColor: "black",
+  padding: "none",
+  marginBottom: 10,
+  marginTop: 0,
+  marginLeft: 10,
+  height: 200,
+  width: 350,
+  backgroundColor: "darkgrey",
+});
+
+const StyledBookingButton = styled(Button, {
+  size: "$7",
+  backgroundColor: "grey",
+  width: 350,
+  shadowColor: "$orange2Dark",
+  shadowOpacity: 80,
+  elevation: "$6",
+  marginLeft: 10,
 });
