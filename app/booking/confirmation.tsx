@@ -30,6 +30,8 @@ function RecommendRoom() {
 }
 
 export default function Confirmation() {
+  const utils = trpc.useUtils();
+
   const { roomType, roomSize, startTime, endTime } = useLocalSearchParams<{
     roomType: string;
     roomSize: string;
@@ -59,7 +61,9 @@ export default function Confirmation() {
   const Size = Converter.convertRoomSize(roomSize);
 
   const mutation = trpc.booking.create.useMutation({
-    onSuccess() {},
+    onSuccess() {
+      utils.booking.invalidate();
+    },
     onError(err) {
       setError(err.message);
     },
