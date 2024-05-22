@@ -2,22 +2,24 @@ import { FlatList } from "react-native";
 
 import { trpc } from "@/utils/trpc";
 import {
-  ListItem,
   Button,
+  ListItem,
   Separator,
+  Text,
+  View,
   XStack,
   YGroup,
   styled,
-  Text,
-  View,
 } from "tamagui";
 
-import { inferRouterOutputs } from "@trpc/server";
-import { Converter } from "@/utils/converter";
 import { AppRouter } from "@/server";
+import { Converter } from "@/utils/converter";
+import { inferRouterOutputs } from "@trpc/server";
+import { useState } from "react";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
+  const [filterState, setFilterState] = useState({ userId: 1, filter: {} });
+  const query = trpc.booking.get.useQuery(filterState);
   type routerOutput = inferRouterOutputs<AppRouter>;
   type bookingGetOutput = routerOutput["booking"]["get"][0];
   // const [filterState, setFilterState] = useState<any>(noFilter);
@@ -27,9 +29,14 @@ export default function ActivityScreen() {
   // function setFilterPast() {
   //   setFilterState(FilterPast);
   // }
-  // function FilterPast(item: bookingGetOutput): Boolean {
+  // function FilterPast(item: bookingGetOutput): Boolean {r
   //   return new Date(item.startTime) < new Date();
   // }
+  const time = new Date();
+  time.setHours(time.getHours() + 8);
+
+  const timeBack = new Date();
+  timeBack.setHours(timeBack.getHours() - 8);
 
   return (
     <StyledContainer>
@@ -37,13 +44,46 @@ export default function ActivityScreen() {
         <View>
           <View>
             <XStack gap={"$3"}>
-              <Button width={"30%"} paddingHorizontal={10}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={10}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: {
+                      startDate: new Date(0).toISOString(),
+                      endDate: timeBack.toISOString(),
+                    },
+                  }))
+                }
+              >
                 PAST
               </Button>
-              <Button width={"30%"} paddingHorizontal={0}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: {
+                      startDate: new Date().toISOString(),
+                      endDate: time.toISOString(),
+                    },
+                  }))
+                }
+              >
                 ACTIVE
               </Button>
-              <Button width={"30%"} paddingHorizontal={0}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: { startDate: new Date().toISOString() },
+                  }))
+                }
+              >
                 UPCOMING
               </Button>
             </XStack>
@@ -87,6 +127,8 @@ export default function ActivityScreen() {
           </XStack>
         </View>
       )}
+
+      {query.isLoading && query.isFetching && <Text>Loading...</Text>}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
     </StyledContainer>
   );
