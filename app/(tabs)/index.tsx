@@ -1,8 +1,8 @@
-import { Text, View, Button, styled } from "tamagui";
-import { trpc } from "@/utils/trpc";
-import { router } from "expo-router";
-import { $Enums } from "@prisma/client";
 import { Converter } from "@/utils/converter";
+import { trpc } from "@/utils/trpc";
+import { $Enums } from "@prisma/client";
+import { router } from "expo-router";
+import { Button, Separator, Text, View, styled } from "tamagui";
 
 export default function HomeScreen() {
   const utils = trpc.useUtils();
@@ -78,7 +78,7 @@ export default function HomeScreen() {
   const endTime = Converter.formatDate(enddatesString);
 
   return (
-    <View style={{}}>
+    <View>
       <StyledButton>
         <View justifyContent="center">
           <View>
@@ -94,6 +94,7 @@ export default function HomeScreen() {
       <StyledBookingButton onPress={() => router.push("/booking/")}>
         Book a room
       </StyledBookingButton>
+      <StyledSeparator />
       <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
     </View>
   );
@@ -102,6 +103,12 @@ export default function HomeScreen() {
 const StyledTitle = styled(Text, {
   fontSize: 20,
   fontWeight: "bold",
+});
+const StyledSeparator = styled(Separator, {
+  width: "100%",
+  height: 1,
+  backgroundColor: "black",
+  marginBottom: 10,
 });
 
 const StyledButton = styled(Button, {
