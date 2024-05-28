@@ -85,6 +85,10 @@ export const bookingRouter = router({
         orderBy: {
           startTime: "desc",
         },
+        include: {
+          user: true,
+          room: true,
+        },
       });
     }),
   setStatus: publicProcedure

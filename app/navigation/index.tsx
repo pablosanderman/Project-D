@@ -1,82 +1,20 @@
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-} from "react-native-reanimated";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
-import { StyleSheet, Dimensions } from "react-native";
+import { trpc } from "@/utils/trpc";
 import { MapPicture } from "./map";
-import { View, Text } from "tamagui";
-
-function clamp(val, min, max) {
-  return Math.min(Math.max(val, min), max);
-}
-
-const { width, height } = Dimensions.get("screen");
+import MapController from "./MapController";
+import { useLocalSearchParams } from "expo-router";
+import { navigationIdToCoords } from "./navigationIdToCoords";
 
 export default function Navigation() {
-  const translationX = useSharedValue(0);
-  const translationY = useSharedValue(0);
-  const prevTranslationX = useSharedValue(0);
-  const prevTranslationY = useSharedValue(0);
+  const { roomId } = useLocalSearchParams<{ roomId: string }>();
 
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translationX.value },
-      { translateY: translationY.value },
-    ],
-  }));
+  const query = trpc.room.get.useQuery(parseInt(roomId!));
 
-  const pan = Gesture.Pan()
-    .minDistance(1)
-    .onStart(() => {
-      prevTranslationX.value = translationX.value;
-      prevTranslationY.value = translationY.value;
-    })
-    .onUpdate((event) => {
-      const maxTranslateX = width / 2 - 50;
-      const maxTranslateY = height / 2 - 50;
-
-      translationX.value = clamp(
-        prevTranslationX.value + event.translationX,
-        -maxTranslateX,
-        maxTranslateX
-      );
-      translationY.value = clamp(
-        prevTranslationY.value + event.translationY,
-        -maxTranslateY,
-        maxTranslateY
-      );
-    })
-    .runOnJS(true);
+  if (query.isFetched) navigationIdToCoords(query.data!.navigationId);
 
   return (
-    // <View>
-    //   <Text>Hello</Text>
-    // </View>
-    <GestureHandlerRootView style={styles.container}>
-      <GestureDetector gesture={pan}>
-        <Animated.View style={[animatedStyles]}>
-          <MapPicture />
-        </Animated.View>
-      </GestureDetector>
-    </GestureHandlerRootView>
+    <MapController>
+      {query.isFetched && navigationIdToCoords(query.data!.navigationId)}
+      <MapPicture />
+    </MapController>
   );
 }
-// todo: fix the styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  box: {
-    width: 100,
-    height: 100,
-    backgroundColor: "#b58df1",
-    borderRadius: 20,
-  },
-});

@@ -14,7 +14,7 @@ export const roomRouter = router({
           "FOUR_TO_EIGHT",
           "EIGHT_TO_SIXTEEN",
         ]),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { input } = opts;
@@ -43,7 +43,7 @@ export const roomRouter = router({
           "FOUR_TO_EIGHT",
           "EIGHT_TO_SIXTEEN",
         ]),
-      })
+      }),
     )
     .query(async (opts) => {
       const { input } = opts;
