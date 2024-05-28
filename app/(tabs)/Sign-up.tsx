@@ -1,9 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Button, Input} from 'tamagui';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
+
 export default function LoginScreen() {
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isMatch, setIsMatch] = useState(false);
+    const handlePasswordChange = (text: string) => {
+        setIsMatch(text === confirmPassword);
+        setPassword(text);
+      };
+    
+      const handleConfirmPasswordChange = (password:string) => {
+        setConfirmPassword(password);
+        setIsMatch(password === password);
+      };
     return (
         <View style={styles.container}>
             <View style={styles.popup}>
@@ -14,8 +27,9 @@ export default function LoginScreen() {
                 <Input style={styles.side} placeholder="Surname" />
                 </View>
                 <Input style={styles.fields} placeholder="Email" />
-                <Input style={styles.fields} secureTextEntry={true} placeholder="Password" />
-                <Input style={styles.fields} secureTextEntry={true} placeholder="Confirm Password" />
+                <Input style={isMatch? styles.fields:styles.errorfields} secureTextEntry={true} onChangeText={handlePasswordChange} placeholder="Password" />
+                <Input style={isMatch?styles.fields:styles.errorfields} secureTextEntry={true} onChangeText={handleConfirmPasswordChange}placeholder="Confirm Password" />
+                <Text style={styles.ErrorMessages}>{isMatch? "": "Please ensure both passwords are identical."}</Text>
             </View>
             <Text style={styles.askers}> Already have an account?</Text>
             <View style={styles.buttons}>
@@ -53,7 +67,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         width: 250,
-        height: 265,
+        height: 280,
     },
     text: {
         fontSize: 20,
@@ -68,5 +82,18 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingBottom: 10,
     },
+    errorfields: {
+        backgroundColor: 'red',
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 10,
+        paddingBottom: 10,
+    },
+    ErrorMessages: {
+        color: 'red',
+        fontSize: 10,
+        textAlign: 'center',
+    }
 
 });
+
