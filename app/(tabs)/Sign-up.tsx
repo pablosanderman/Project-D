@@ -30,11 +30,13 @@ export default function LoginScreen() {
                 <Input style={isMatch? styles.fields:styles.errorfields} secureTextEntry={true} onChangeText={handlePasswordChange} placeholder="Password" />
                 <Input style={isMatch?styles.fields:styles.errorfields} secureTextEntry={true} onChangeText={handleConfirmPasswordChange}placeholder="Confirm Password" />
                 <Text style={styles.ErrorMessages}>{isMatch? "": "Please ensure both passwords are identical."}</Text>
+                <Button style={styles.signup} onPress={() => {}} backgroundColor={'darkgray'}> Sign up</Button>
             </View>
             <Text style={styles.askers}> Already have an account?</Text>
             <View style={styles.buttons}>
             
             <Button onPress={() => {router.push("./LoginScreen")}} backgroundColor={'darkgray'}> login</Button>
+            
             </View>
         </View>
     );
@@ -46,6 +48,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#ecf0f1',
+    },
+    signup: {
+        width:100,
+        marginLeft: 75,
     },
     askers: {
         fontSize: 12,
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         width: 250,
-        height: 280,
+        height: 320,
     },
     text: {
         fontSize: 20,
