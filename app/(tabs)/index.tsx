@@ -6,6 +6,7 @@ import { Button, Separator, Text, View, styled } from "tamagui";
 
 export default function HomeScreen() {
   const utils = trpc.useUtils();
+
   const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
 
   if (query.data) {
@@ -16,14 +17,40 @@ export default function HomeScreen() {
       utils.booking.invalidate();
     },
   });
-  const createBooking = () => {
-    mutation.mutate({
-      userId: 1,
-      startTime: new Date().toISOString(),
-      endTime: new Date().toISOString(),
-      roomId: 1,
-      status: "UPCOMING",
+
+  const fetchRooms = trpc.room.getRooms.useQuery();
+  const fetchBookings = trpc.booking.get.useQuery({ userId: 1, filter: {} });
+
+  const createBooking = async () => {
+    console.log("createBooking");
+    const rooms = fetchRooms.data;
+    const bookings = fetchBookings.data;
+
+    if (rooms === undefined || bookings === undefined) return;
+
+    //filter rooms that are not booked at the desired time
+    const availableRooms = rooms.filter((room) => {
+      const overlappingBooking = bookings.find(
+        (booking) => booking.roomId === room.id
+        // booking.startTime < new Date().toISOString() &&
+        // booking.endTime > new Date().toISOString()
+      );
+      return !overlappingBooking;
     });
+
+    if (availableRooms.length === 0) {
+      console.log("No rooms available");
+      return;
+    } else if (availableRooms.length > 1) {
+      console.log("log test");
+      mutation.mutate({
+        userId: 1,
+        startTime: new Date().toISOString(),
+        endTime: new Date().toISOString(),
+        roomId: availableRooms[0].id,
+        status: "UPCOMING",
+      });
+    }
   };
 
   return (

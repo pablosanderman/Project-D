@@ -1,27 +1,25 @@
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 
 import { trpc } from "@/utils/trpc";
-import type { AppRouter } from "@/server";
-import { useState } from "react";
 import {
-  ListItem,
   Button,
+  ListItem,
   Separator,
+  Text,
+  View,
   XStack,
   YGroup,
   styled,
-  Text,
-  View,
 } from "tamagui";
-import { set } from "zod";
-import { Booking } from "@prisma/client";
-import { inferRouterOutputs } from "@trpc/server";
-import { formatDate } from "@/utils/converters";
 
-const lang = "nl-NL";
+import { AppRouter } from "@/server";
+import { Converter } from "@/utils/converter";
+import { inferRouterOutputs } from "@trpc/server";
+import { useState } from "react";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
+  const [filterState, setFilterState] = useState({ userId: 1, filter: {} });
+  const query = trpc.booking.get.useQuery(filterState);
   type routerOutput = inferRouterOutputs<AppRouter>;
   type bookingGetOutput = routerOutput["booking"]["get"][0];
   // const [filterState, setFilterState] = useState<any>(noFilter);
@@ -31,23 +29,61 @@ export default function ActivityScreen() {
   // function setFilterPast() {
   //   setFilterState(FilterPast);
   // }
-  // function FilterPast(item: bookingGetOutput): Boolean {
+  // function FilterPast(item: bookingGetOutput): Boolean {r
   //   return new Date(item.startTime) < new Date();
   // }
+  const time = new Date();
+  time.setHours(time.getHours() + 8);
+
+  const timeBack = new Date();
+  timeBack.setHours(timeBack.getHours() - 8);
 
   return (
-    <View style={styles.container}>
+    <StyledContainer>
       {query.data && (
         <View>
           <View>
             <XStack gap={"$3"}>
-              <Button width={"30%"} paddingHorizontal={10}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={10}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: {
+                      startDate: new Date(0).toISOString(),
+                      endDate: timeBack.toISOString(),
+                    },
+                  }))
+                }
+              >
                 PAST
               </Button>
-              <Button width={"30%"} paddingHorizontal={0}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: {
+                      startDate: new Date().toISOString(),
+                      endDate: time.toISOString(),
+                    },
+                  }))
+                }
+              >
                 ACTIVE
               </Button>
-              <Button width={"30%"} paddingHorizontal={0}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: { startDate: new Date().toISOString() },
+                  }))
+                }
+              >
                 UPCOMING
               </Button>
             </XStack>
@@ -63,12 +99,26 @@ export default function ActivityScreen() {
                       marginBottom={"$2"}
                       backgroundColor={"grey"}
                     >
-                      <Separator />
-                      <Text>Kamer {item.roomId}</Text>
-                      <Text>Start: {formatDate(item.startTime, lang)}</Text>
-                      <Text>Eindigt: {formatDate(item.endTime, lang)}</Text>
-                      <Text>Status van de boeking: {item.status}</Text>
-                      <Text>Geboekt door: {item.user.name}</Text>
+                      <StyledSeparator />
+                      <Text>Room {item.roomId}</Text>
+                      <Text>
+                        At{" "}
+                        <Text fontWeight={"bold"}>
+                          {Converter.formatFromTimeToTime(
+                            item.startTime,
+                            item.endTime
+                          )}
+                        </Text>{" "}
+                        on{" "}
+                        <Text fontWeight={"bold"}>
+                          {Converter.formatDate(item.startTime)}
+                        </Text>
+                      </Text>
+                      <Text>
+                        Booking status:{" "}
+                        {Converter.convertBookingStatus(item.status)}
+                      </Text>
+                      <Text>Booked by: {item.user.name}</Text>
                     </ListItem>
                   </YGroup.Item>
                 )}
@@ -77,24 +127,21 @@ export default function ActivityScreen() {
           </XStack>
         </View>
       )}
+
+      {query.isLoading && query.isFetching && <Text>Loading...</Text>}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
-    </View>
+    </StyledContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
+const StyledContainer = styled(View, {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+const StyledSeparator = styled(Separator, {
+  marginVertical: "$2",
+  height: 1,
+  width: "80%",
 });
