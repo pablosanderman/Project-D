@@ -8,6 +8,7 @@ export const userRouter = router({
       z.object({
         email: z.string().email(),
         name: z.string(),
+        password: z.string(),
       })
     )
     .mutation(async (opts) => {
