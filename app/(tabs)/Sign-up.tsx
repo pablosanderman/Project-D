@@ -7,9 +7,12 @@ import { router } from 'expo-router';
 export default function LoginScreen() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [isMatch, setIsMatch] = useState(false);
+    const [isMatch, setIsMatch] = useState(true);
     const handlePasswordChange = (text: string) => {
-        setIsMatch(text === confirmPassword);
+     
+        setIsMatch(text ==="" || confirmPassword ==="");
+        
+        //setIsMatch(text === confirmPassword);
         setPassword(text);
       };
     
