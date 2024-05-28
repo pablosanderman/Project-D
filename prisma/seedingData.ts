@@ -15,6 +15,7 @@
 //   id        Int       @id @default(autoincrement())
 //   email     String    @unique
 //   name      String?
+//   password  String
 //   bookings  Booking[]
 //   createdAt DateTime  @default(now())
 //   updatedAt DateTime  @updatedAt
@@ -72,14 +73,17 @@ const users = [
   {
     email: "john.doe@gmail.com",
     name: "John Doe",
+    password: "john'spassword",
   },
   {
     email: "jane.doe@gmail.com",
     name: "Jane Doe",
+    password: "jane'spassword",
   },
   {
     email: "bob.doe@gmail.com",
     name: "Bob Doe",
+    password: "Bobspassword",
   },
 ];
 
