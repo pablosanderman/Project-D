@@ -1,56 +1,16 @@
-import { StyleSheet } from "react-native";
-
-import { Text, View, Button } from "tamagui";
+import { Converter } from "@/utils/converter";
 import { trpc } from "@/utils/trpc";
+import { Compass } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
-import { $Enums } from "@prisma/client";
-import { formatDate } from "@/utils/converters";
+import { Button, Separator, Text, View, styled } from "tamagui";
 
 export default function HomeScreen() {
   const utils = trpc.useUtils();
   const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
-  let data: {
-    userId: number;
-    startTime: string;
-    endTime: string;
-    roomId: number;
-    status: $Enums.BookingStatus;
-    id: number;
-    createdAt: string;
-    updatedAt: string;
-  } = {
-    userId: 0,
-    startTime: "",
-    endTime: "",
-    roomId: 0,
-    status: "UPCOMING",
-    id: 0,
-    createdAt: "",
-    updatedAt: "",
-  };
+
   if (query.data) {
-    data = query.data;
   }
-  //   // Function to split the string into month and day
-  //   function splitDate(dateString: string): { month: number, day: number } {
-  //     const date = new Date(dateString);
-  //     const month = date.getMonth() + 1; // Months are zero-based, so we add 1
-  //     const day = date.getDate();
-  //     return { month, day };
-  // }
 
-  // // Function to extract hours and minutes
-  //   function extractTime(dateString: string): { hours: number, minutes: number } {
-  //     const date = new Date(dateString);
-  //     const hours = date.getHours();
-  //     const minutes = date.getMinutes();
-  //     return { hours, minutes };
-  //   }
-
-  const dateString = data.startTime;
-  const enddatesString = data.endTime;
-  const startTime = formatDate(dateString, "nl-NL");
-  const endTime = formatDate(enddatesString, "nl-NL");
   const mutation = trpc.booking.create.useMutation({
     onSuccess(input) {
       utils.booking.invalidate();
@@ -65,51 +25,74 @@ export default function HomeScreen() {
       status: "UPCOMING",
     });
   };
+
   return (
-    <View style={{}}>
-      <Button
-        size="$10"
-        elevation={"$6"}
-        shadowColor={"black"}
-        padding={"none"}
-        marginBottom={10}
-        marginTop={0}
-        marginLeft={10}
-        height={200}
-        width={350}
-        backgroundColor="darkgrey"
-      >
-        <View justifyContent="center">
-          <View>
-            <Text style={styles.title}>Booking</Text>
-            <Text width={75}>Room {data.roomId}</Text>
-          </View>
-          <View>
-            <Text>Start: {startTime}</Text>
-            <Text>End: {endTime}</Text>
-          </View>
+    <View>
+      <StyledButton>
+        <View>
+          {query.data && (
+            <>
+              <View justifyContent="center">
+                <StyledTitle>Booking</StyledTitle>
+                <Text>Room {query.data.room.name}</Text>
+              </View>
+              <View>
+                <Text>Start: {Converter.formatDate(query.data.startTime)}</Text>
+                <Text>End: {Converter.formatDate(query.data.endTime)}</Text>
+              </View>
+            </>
+          )}
         </View>
-      </Button>
-      <Button
-        size="$7"
-        backgroundColor="grey"
-        width={350}
-        shadowColor={"$orange2Dark"}
-        shadowOpacity={80}
-        elevation={"$6"}
-        marginLeft={10}
-        onPress={() => router.push("/booking/")}
-      >
-        book a room
-      </Button>
-      <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
+        <Button
+          onPress={() =>
+            router.push({
+              pathname: "/navigation",
+              params: { roomId: query.data!.roomId },
+            })
+          }
+        >
+          <Compass />
+        </Button>
+      </StyledButton>
+      <StyledBookingButton onPress={() => router.push("/booking/")}>
+        Book a room
+      </StyledBookingButton>
+      <StyledSeparator />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+const StyledTitle = styled(Text, {
+  fontSize: 20,
+  fontWeight: "bold",
+});
+const StyledSeparator = styled(Separator, {
+  width: "100%",
+  height: 1,
+  backgroundColor: "black",
+  marginBottom: 10,
+});
+
+const StyledButton = styled(Button, {
+  size: "$10",
+  elevation: "$6",
+  shadowColor: "black",
+  padding: "none",
+  marginBottom: 10,
+  marginTop: 0,
+  marginLeft: 10,
+  height: 200,
+  width: 350,
+  backgroundColor: "darkgrey",
+  flexDirection: "column",
+});
+
+const StyledBookingButton = styled(Button, {
+  size: "$7",
+  backgroundColor: "grey",
+  width: 350,
+  shadowColor: "$orange2Dark",
+  shadowOpacity: 80,
+  elevation: "$6",
+  marginLeft: 10,
 });
