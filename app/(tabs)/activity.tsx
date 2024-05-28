@@ -1,29 +1,25 @@
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
-import type { CardProps } from "tamagui";
 import {
-  ListItem,
-  Card,
   Button,
+  ListItem,
   Separator,
+  Text,
+  View,
   XStack,
   YGroup,
   styled,
-  Text,
-  View,
-  H2,
-  Paragraph,
-  Image,
 } from "tamagui";
 
-import { inferRouterOutputs } from "@trpc/server";
-import { Converter } from "@/utils/converter";
 import { AppRouter } from "@/server";
+import { Converter } from "@/utils/converter";
+import { inferRouterOutputs } from "@trpc/server";
+import { useState } from "react";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
+  const [filterState, setFilterState] = useState({ userId: 1, filter: {} });
+  const query = trpc.booking.get.useQuery(filterState);
   type routerOutput = inferRouterOutputs<AppRouter>;
   type bookingGetOutput = routerOutput["booking"]["get"][0];
   // const [filterState, setFilterState] = useState<any>(noFilter);
@@ -33,23 +29,61 @@ export default function ActivityScreen() {
   // function setFilterPast() {
   //   setFilterState(FilterPast);
   // }
-  // function FilterPast(item: bookingGetOutput): Boolean {
+  // function FilterPast(item: bookingGetOutput): Boolean {r
   //   return new Date(item.startTime) < new Date();
   // }
+  const time = new Date();
+  time.setHours(time.getHours() + 8);
+
+  const timeBack = new Date();
+  timeBack.setHours(timeBack.getHours() - 8);
 
   return (
-    <View style={styles.container}>
+    <StyledContainer>
       {query.data && (
         <View>
           <View>
             <XStack gap={"$3"}>
-              <Button width={"30%"} paddingHorizontal={10}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={10}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: {
+                      startDate: new Date(0).toISOString(),
+                      endDate: timeBack.toISOString(),
+                    },
+                  }))
+                }
+              >
                 PAST
               </Button>
-              <Button width={"30%"} paddingHorizontal={0}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: {
+                      startDate: new Date().toISOString(),
+                      endDate: time.toISOString(),
+                    },
+                  }))
+                }
+              >
                 ACTIVE
               </Button>
-              <Button width={"30%"} paddingHorizontal={0}>
+              <Button
+                width={"30%"}
+                paddingHorizontal={0}
+                onPress={() =>
+                  setFilterState((prev) => ({
+                    ...prev,
+                    filter: { startDate: new Date().toISOString() },
+                  }))
+                }
+              >
                 UPCOMING
               </Button>
             </XStack>
@@ -65,7 +99,7 @@ export default function ActivityScreen() {
                       marginBottom={"$2"}
                       backgroundColor={"grey"}
                     >
-                      <Separator />
+                      <StyledSeparator />
                       <Text>Room {item.roomId}</Text>
                       <Text>
                         At{" "}
@@ -93,24 +127,21 @@ export default function ActivityScreen() {
           </XStack>
         </View>
       )}
+
+      {query.isLoading && query.isFetching && <Text>Loading...</Text>}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
-    </View>
+    </StyledContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
+const StyledContainer = styled(View, {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+const StyledSeparator = styled(Separator, {
+  marginVertical: "$2",
+  height: 1,
+  width: "80%",
 });

@@ -1,7 +1,7 @@
-import { router, publicProcedure, createCallerFactory } from "../trpc";
-import z from "zod";
 import prisma from "@/utils/prisma";
 import { BookingStatus } from "@prisma/client";
+import z from "zod";
+import { createCallerFactory, publicProcedure, router } from "../trpc";
 
 export const bookingRouter = router({
   create: publicProcedure
@@ -12,7 +12,7 @@ export const bookingRouter = router({
         endTime: z.string().datetime(),
         roomId: z.number(),
         status: z.enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"]),
-      }),
+      })
     )
     .mutation(async (opts) => {
       const { input } = opts;
@@ -36,7 +36,7 @@ export const bookingRouter = router({
           RoomType: z.enum(["MEETING", "FOCUS", "DESK"]).optional(),
           Capacity: z.number().optional(),
         }),
-      }),
+      })
     )
     .query(async (opts) => {
       const { userId, filter } = opts.input;
@@ -44,10 +44,24 @@ export const bookingRouter = router({
         where: {
           userId: userId,
           status: filter.status,
-          startTime: {
-            gte: filter.startDate,
-            lte: filter.endDate,
-          },
+          OR: [
+            {
+              startTime: {
+                lte: filter.endDate,
+              },
+              endTime: {
+                gte: filter.startDate,
+              },
+            },
+            {
+              startTime: {
+                gte: filter.startDate,
+              },
+              endTime: {
+                lte: filter.endDate,
+              },
+            },
+          ],
           roomId: filter.room,
           room: {
             type: filter.RoomType,
@@ -78,7 +92,7 @@ export const bookingRouter = router({
       z.object({
         id: z.number(),
         status: z.string(),
-      }),
+      })
     )
     .mutation(async (opts) => {
       const { id, status } = opts.input;

@@ -1,9 +1,8 @@
-import { StyleSheet } from "react-native";
-import { Text, View, Button } from "tamagui";
-import { trpc } from "@/utils/trpc";
-import { router } from "expo-router";
-import { $Enums } from "@prisma/client";
 import { Converter } from "@/utils/converter";
+import { trpc } from "@/utils/trpc";
+import { $Enums } from "@prisma/client";
+import { router } from "expo-router";
+import { Button, Separator, Text, View, styled } from "tamagui";
 
 export default function HomeScreen() {
   const utils = trpc.useUtils();
@@ -79,22 +78,11 @@ export default function HomeScreen() {
   const endTime = Converter.formatDate(enddatesString);
 
   return (
-    <View style={{}}>
-      <Button
-        size="$10"
-        elevation={"$6"}
-        shadowColor={"black"}
-        padding={"none"}
-        marginBottom={10}
-        marginTop={0}
-        marginLeft={10}
-        height={200}
-        width={350}
-        backgroundColor="darkgrey"
-      >
+    <View>
+      <StyledButton>
         <View justifyContent="center">
           <View>
-            <Text style={styles.title}>Booking</Text>
+            <StyledTitle>Booking</StyledTitle>
             <Text width={75}>Room {data?.roomId}</Text>
           </View>
           <View>
@@ -102,27 +90,46 @@ export default function HomeScreen() {
             <Text>End: {endTime}</Text>
           </View>
         </View>
-      </Button>
-      <Button
-        size="$7"
-        backgroundColor="grey"
-        width={350}
-        shadowColor={"$orange2Dark"}
-        shadowOpacity={80}
-        elevation={"$6"}
-        marginLeft={10}
-        onPress={() => router.push("/booking/")}
-      >
+      </StyledButton>
+      <StyledBookingButton onPress={() => router.push("/booking/")}>
         Book a room
-      </Button>
+      </StyledBookingButton>
+      <StyledSeparator />
       <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+const StyledTitle = styled(Text, {
+  fontSize: 20,
+  fontWeight: "bold",
+});
+const StyledSeparator = styled(Separator, {
+  width: "100%",
+  height: 1,
+  backgroundColor: "black",
+  marginBottom: 10,
+});
+
+const StyledButton = styled(Button, {
+  size: "$10",
+  elevation: "$6",
+  shadowColor: "black",
+  padding: "none",
+  marginBottom: 10,
+  marginTop: 0,
+  marginLeft: 10,
+  height: 200,
+  width: 350,
+  backgroundColor: "darkgrey",
+});
+
+const StyledBookingButton = styled(Button, {
+  size: "$7",
+  backgroundColor: "grey",
+  width: 350,
+  shadowColor: "$orange2Dark",
+  shadowOpacity: 80,
+  elevation: "$6",
+  marginLeft: 10,
 });
