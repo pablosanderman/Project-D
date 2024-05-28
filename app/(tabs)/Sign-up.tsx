@@ -1,25 +1,25 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Input} from 'tamagui';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 
 export default function LoginScreen() {
-    const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isMatch, setIsMatch] = useState(true);
+    const [password, setPassword] = useState('');
     const handlePasswordChange = (text: string) => {
-     
-        setIsMatch(text ==="" || confirmPassword ==="");
-        
-        //setIsMatch(text === confirmPassword);
         setPassword(text);
-      };
+    };
     
-      const handleConfirmPasswordChange = (password:string) => {
-        setConfirmPassword(password);
-        setIsMatch(password === password);
-      };
+    const handleConfirmPasswordChange = (_password: string) => {
+        setConfirmPassword(_password);
+    };
+
+    useEffect(() => {
+        setIsMatch(password === confirmPassword);
+    }, [password, confirmPassword]);
+
     return (
         <View style={styles.container}>
             <View style={styles.popup}>
@@ -31,7 +31,7 @@ export default function LoginScreen() {
                 </View>
                 <Input style={styles.fields} placeholder="Email" />
                 <Input style={isMatch? styles.fields:styles.errorfields} secureTextEntry={true} onChangeText={handlePasswordChange} placeholder="Password" />
-                <Input style={isMatch?styles.fields:styles.errorfields} secureTextEntry={true} onChangeText={handleConfirmPasswordChange}placeholder="Confirm Password" />
+                <Input style={isMatch? styles.fields:styles.errorfields} secureTextEntry={true} onChangeText={handleConfirmPasswordChange}placeholder="Confirm Password" />
                 <Text style={styles.ErrorMessages}>{isMatch? "": "Please ensure both passwords are identical."}</Text>
                 <Button style={styles.signup} onPress={() => {}} backgroundColor={'darkgray'}> Sign up</Button>
             </View>
