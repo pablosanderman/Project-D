@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ecf0f1",
   },
   signup: {
-    width: 100,
-    marginLeft: 75,
+    width: 120,
+    marginLeft: 65,
   },
   askers: {
     fontSize: 12,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     width: 250,
-    height: 320,
+    height: 325,
   },
   text: {
     fontSize: 20,
