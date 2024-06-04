@@ -60,10 +60,9 @@ export default function LoginScreen() {
         <Text style={styles.ErrorMessages}>
           {isMatch ? "" : "Please ensure both passwords are identical."}
         </Text>
+        <View style={ isMatch? styles.signup: styles.nosignup}>
         <Button
-          style={ isMatch? styles.signup: styles.nosignup}
           disabled={!isFormValid}
-          
           onPress={() => {
             console.log("clicked")
             setSaveUser(true);
@@ -74,6 +73,7 @@ export default function LoginScreen() {
         >
           Sign up
         </Button>
+        </View>
       </View>
       <Text style={styles.askers}> Already have an account?</Text>
       <View style={styles.buttons}>
@@ -83,7 +83,6 @@ export default function LoginScreen() {
           }}
           backgroundColor={"darkgray"}
         >
-          {" "}
           login
         </Button>
       </View>
@@ -104,11 +103,13 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
   },
   signup: {
+    borderRadius: 10,
     width: 120,
     marginLeft: 65,
     backgroundColor: "lightgray",
   },
   nosignup:{
+    borderRadius: 10,
     width: 120,
     marginLeft: 65,
     backgroundColor: "red",
