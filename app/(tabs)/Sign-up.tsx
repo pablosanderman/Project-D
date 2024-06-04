@@ -63,14 +63,15 @@ export default function LoginScreen() {
         <Button
           style={ isMatch? styles.signup: styles.nosignup}
           disabled={!isFormValid}
+          
           onPress={() => {
+            console.log("clicked")
             setSaveUser(true);
             createUser(password, name, email, surname);
             setSaveUser(false);
           }}
           backgroundColor={"darkgray"}
         >
-          {" "}
           Sign up
         </Button>
       </View>
@@ -96,6 +97,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#ecf0f1",
+  },
+  validsignup:{
+    width: 120,
+    marginLeft: 65,
+    backgroundColor: "green",
   },
   signup: {
     width: 120,
