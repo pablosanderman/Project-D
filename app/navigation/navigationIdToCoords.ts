@@ -1,6 +1,7 @@
 const map1 = new Map([
   ["02.01", "TEST VALUE"],
   ["02.02", "TEST VALUE"],
+  ["02.C2", "TEST VALUE"],
 ]);
 
 export function navigationIdToCoords(id: string) {
