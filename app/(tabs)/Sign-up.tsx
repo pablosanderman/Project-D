@@ -29,9 +29,12 @@ export default function LoginScreen() {
     });
   };
 
+  const [isFormValid, setIsFormValid] = useState(false);
+
   useEffect(() => {
     setIsMatch(password === confirmPassword);
-  }, [password, confirmPassword]);
+    setIsFormValid(password !== "" && name !== "" && surname !== "" && confirmPassword !== "");
+  }, [password, name, surname, confirmPassword]);
 
   return (
     <View style={styles.container}>
@@ -41,7 +44,7 @@ export default function LoginScreen() {
           <Input style={styles.side} onChangeText={setName} placeholder="Name" />
           <Input style={styles.side} onChangeText={setSurname}placeholder="Surname" />
         </View>
-        <Input style={styles.fields} placeholder="Email" />
+        <Input style={styles.fields} onChangeText={setEmail}placeholder="Email" />
         <Input
           style={isMatch ? styles.fields : styles.errorfields}
           secureTextEntry={true}
@@ -58,7 +61,8 @@ export default function LoginScreen() {
           {isMatch ? "" : "Please ensure both passwords are identical."}
         </Text>
         <Button
-          style={styles.signup}
+          style={ isMatch? styles.signup: styles.nosignup}
+          disabled={!isFormValid}
           onPress={() => {
             setSaveUser(true);
             createUser(password, name, email, surname);
@@ -96,6 +100,12 @@ const styles = StyleSheet.create({
   signup: {
     width: 120,
     marginLeft: 65,
+    backgroundColor: "lightgray",
+  },
+  nosignup:{
+    width: 120,
+    marginLeft: 65,
+    backgroundColor: "red",
   },
   askers: {
     fontSize: 12,
