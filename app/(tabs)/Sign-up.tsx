@@ -9,6 +9,9 @@ export default function LoginScreen() {
   const [isMatch, setIsMatch] = useState(true);
   const [password, setPassword] = useState("");
   const [saveUser, setSaveUser] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const handlePasswordChange = (text: string) => {
     setPassword(text);
   };
@@ -17,11 +20,12 @@ export default function LoginScreen() {
     setConfirmPassword(_password);
   };
   const mutation = trpc.user.create.useMutation({});
-  const createUser = async () => {
+  const createUser = async (Password: string, Name: string, Email:string, Surname: string) => {
     await mutation.mutateAsync({
-      password: password,
-      name: "Jon",
-      email: "jon@garfield.com",
+      password: Password,
+      name: Name,
+      email: Email,
+      surname: Surname,
     });
   };
 
@@ -34,8 +38,8 @@ export default function LoginScreen() {
       <View style={styles.popup}>
         <Text style={styles.text}>Sign up</Text>
         <View style={styles.row}>
-          <Input style={styles.side} placeholder="Name" />
-          <Input style={styles.side} placeholder="Surname" />
+          <Input style={styles.side} onChangeText={setName} placeholder="Name" />
+          <Input style={styles.side} onChangeText={setSurname}placeholder="Surname" />
         </View>
         <Input style={styles.fields} placeholder="Email" />
         <Input
@@ -57,7 +61,7 @@ export default function LoginScreen() {
           style={styles.signup}
           onPress={() => {
             setSaveUser(true);
-            createUser();
+            createUser(password, name, email, surname);
             setSaveUser(false);
           }}
           backgroundColor={"darkgray"}
