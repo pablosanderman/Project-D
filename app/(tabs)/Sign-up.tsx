@@ -1,9 +1,9 @@
 import { trpc } from "@/utils/trpc";
+import { Utensils } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "tamagui";
-
 export default function LoginScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isMatch, setIsMatch] = useState(true);
@@ -12,6 +12,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  const [Error, setError] = useState("");
   const handlePasswordChange = (text: string) => {
     setPassword(text);
   };
@@ -21,16 +22,20 @@ export default function LoginScreen() {
   };
   const mutation = trpc.user.create.useMutation({});
   const createUser = async (Password: string, Name: string, Email:string, Surname: string) => {
-    await mutation.mutateAsync({
+    try{
+      await mutation.mutateAsync({
       password: Password,
       name: Name,
       email: Email,
       surname: Surname,
     });
+    }catch(error){setError(error as string)};
   };
 
   const [isFormValid, setIsFormValid] = useState(false);
-
+  const utils = trpc.useUtils();
+  const [counter, setCounter] = useState(0);
+  
   useEffect(() => {
     setIsMatch(password === confirmPassword);
     setIsFormValid(password !== "" && name !== "" && surname !== "" && confirmPassword !== "");
@@ -57,17 +62,18 @@ export default function LoginScreen() {
           onChangeText={handleConfirmPasswordChange}
           placeholder="Confirm Password"
         />
-        <Text style={styles.ErrorMessages}>
+        <Text style={isMatch? styles.disappear:styles.ErrorMessages}>
           {isMatch ? "" : "Please ensure both passwords are identical."}
         </Text>
+        <Text style={Error===""? styles.disappear : styles.ErrorMessages}>{Error===""? "":"We encountered a problem trying to create your account, maybe it exists already?"}</Text>
         <View style={ isMatch? styles.signup: styles.nosignup}>
         <Button
           disabled={!isFormValid}
           onPress={() => {
-            console.log("clicked")
             setSaveUser(true);
             createUser(password, name, email, surname);
             setSaveUser(false);
+            setCounter(counter + 1);
           }}
           backgroundColor={"darkgray"}
         >
@@ -102,15 +108,21 @@ const styles = StyleSheet.create({
     marginLeft: 65,
     backgroundColor: "green",
   },
+  disappear:{
+    width:0,
+    height:0,
+  },
   signup: {
     borderRadius: 10,
     width: 120,
+    marginTop: 10,
     marginLeft: 65,
     backgroundColor: "lightgray",
   },
   nosignup:{
     borderRadius: 10,
     width: 120,
+    marginTop: 10,
     marginLeft: 65,
     backgroundColor: "red",
   },

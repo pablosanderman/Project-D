@@ -18,6 +18,20 @@ export const userRouter = router({
         data: input,
       });
     }),
+    doesUserExist: publicProcedure.input(z.object({
+      email: z.string().email(),
+      name: z.string(),
+      surname: z.string(),
+    })).query(async (opts) => {
+      const { input } = opts;
+      return await prisma.user.findFirst({
+        where: {
+          email: input.email,
+          name: input.name,
+          surname: input.surname,
+        },
+      }) !== undefined;
+    }),
   get: publicProcedure.input(z.number()).query(async (opts) => {
     const { input } = opts;
     return await prisma.user.findUnique({
