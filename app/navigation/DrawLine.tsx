@@ -29,8 +29,8 @@ const DrawLine: React.FC<LineProps> = ({ start, end }) => {
           y1={start.top < end.top ? 0 : height}
           x2={start.left < end.left ? width : 0}
           y2={start.top < end.top ? height : 0}
-          stroke="black"
-          strokeWidth="2"
+          stroke="blue"
+          strokeWidth="8"
         />
       </Svg>
     </View>
