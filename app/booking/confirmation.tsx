@@ -2,10 +2,18 @@ import { trpc } from "@/utils/trpc";
 import { Booking } from "@prisma/client";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { View } from "tamagui";
+import { AlertDialog, Button, View, styled } from "tamagui";
 
 import { Text } from "tamagui";
 import { AuthContext } from "../_layout";
+import { Converter } from "@/utils/converter";
+import {
+  Calendar,
+  Clock,
+  LampDesk,
+  MapPin,
+  Users,
+} from "@tamagui/lucide-icons";
 
 export default function Confirmation() {
   const { userId } = useContext(AuthContext);
@@ -15,11 +23,6 @@ export default function Confirmation() {
       createBooking();
     })();
   }, []);
-
-  const { roomType, size } = useLocalSearchParams<{
-    roomType: string;
-    size: string;
-  }>();
 
   const utils = trpc.useUtils();
 

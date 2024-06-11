@@ -1,12 +1,11 @@
-import { StyleSheet } from "react-native";
-
-import { formatDate } from "@/utils/converters";
 import { trpc } from "@/utils/trpc";
 import { $Enums } from "@prisma/client";
 import { router } from "expo-router";
 import { useContext } from "react";
-import { Button, Text, View } from "tamagui";
+import { Button, Separator, Text, View, styled } from "tamagui";
 import { AuthContext } from "../_layout";
+import { Compass } from "@tamagui/lucide-icons";
+import { Converter } from "@/utils/converter";
 
 export default function HomeScreen() {
   const { userId } = useContext(AuthContext);
@@ -53,7 +52,7 @@ export default function HomeScreen() {
     //filter rooms that are not booked at the desired time
     const availableRooms = rooms.filter((room) => {
       const overlappingBooking = bookings.find(
-        (booking) => booking.roomId === room.id
+        (booking) => booking.roomId === room.id,
         // booking.startTime < new Date().toISOString() &&
         // booking.endTime > new Date().toISOString()
       );

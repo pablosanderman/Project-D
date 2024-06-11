@@ -46,7 +46,7 @@
 //   updatedAt DateTime  @updatedAt
 // }
 
-import { BookingStatus, RoomType, RoomSize } from "@prisma/client";
+import { BookingStatus, RoomType } from "@prisma/client";
 import { CloudSunRain } from "@tamagui/lucide-icons";
 
 const bookings = [
@@ -84,7 +84,7 @@ const users = [
     email: "jane.doe@gmail.com",
     name: "Jane",
     password: "jane'spassword",
-    surname: "Doe"
+    surname: "Doe",
   },
   {
     email: "bob.doe@gmail.com",

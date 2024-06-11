@@ -59,10 +59,6 @@ export default function RootLayout() {
             <AuthContext.Provider value={value}>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="modal"
-                  options={{ presentation: "modal" }}
-                />
               </Stack>
             </AuthContext.Provider>
           </QueryClientProvider>

@@ -1,7 +1,6 @@
 import { FlatList } from "react-native";
 
 import type { AppRouter } from "@/server";
-import { formatDate } from "@/utils/converters";
 import { trpc } from "@/utils/trpc";
 import { inferRouterOutputs } from "@trpc/server";
 import { useContext } from "react";
@@ -13,13 +12,11 @@ import {
   View,
   XStack,
   YGroup,
+  styled,
 } from "tamagui";
 import { AuthContext } from "../_layout";
 
-import { AppRouter } from "@/server";
 import { Converter } from "@/utils/converter";
-import { inferRouterOutputs } from "@trpc/server";
-import { useState } from "react";
 
 export default function ActivityScreen() {
   const { userId } = useContext(AuthContext);
@@ -111,7 +108,7 @@ export default function ActivityScreen() {
                         <Text fontWeight={"bold"}>
                           {Converter.formatFromTimeToTime(
                             item.startTime,
-                            item.endTime
+                            item.endTime,
                           )}
                         </Text>{" "}
                         on{" "}
