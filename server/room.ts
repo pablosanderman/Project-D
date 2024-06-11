@@ -8,13 +8,10 @@ export const roomRouter = router({
       z.object({
         name: z.string(),
         type: z.enum(["MEETING", "FOCUS", "DESK"]),
-        size: z.enum([
-          "ONE_TO_TWO",
-          "TWO_TO_FOUR",
-          "FOUR_TO_EIGHT",
-          "EIGHT_TO_SIXTEEN",
-        ]),
-      }),
+        capacity: z.number(),
+        floor: z.number(),
+        navigationId: z.string(),
+      })
     )
     .mutation(async (opts) => {
       const { input } = opts;
@@ -37,20 +34,16 @@ export const roomRouter = router({
     .input(
       z.object({
         type: z.enum(["MEETING", "FOCUS", "DESK"]),
-        size: z.enum([
-          "ONE_TO_TWO",
-          "TWO_TO_FOUR",
-          "FOUR_TO_EIGHT",
-          "EIGHT_TO_SIXTEEN",
-        ]),
-      }),
+
+        capacity: z.number(),
+      })
     )
     .query(async (opts) => {
       const { input } = opts;
       return await prisma.room.findMany({
         where: {
           type: input.type,
-          size: input.size,
+          capacity: input.capacity,
         },
       });
     }),
