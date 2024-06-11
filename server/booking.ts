@@ -82,8 +82,16 @@ export const bookingRouter = router({
         where: {
           userId: userId,
         },
+        include: {
+          user: true,
+          room: true,
+        },
         orderBy: {
           startTime: "desc",
+        },
+        include: {
+          user: true,
+          room: true,
         },
       });
     }),

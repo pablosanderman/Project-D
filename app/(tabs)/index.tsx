@@ -1,6 +1,6 @@
 import { Converter } from "@/utils/converter";
 import { trpc } from "@/utils/trpc";
-import { $Enums } from "@prisma/client";
+import { Compass } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
 import { Button, Separator, Text, View, styled } from "tamagui";
 
@@ -8,27 +8,8 @@ export default function HomeScreen() {
   const utils = trpc.useUtils();
 
   const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
-  let data: {
-    userId: number;
-    startTime: string;
-    endTime: string;
-    roomId: number;
-    status: $Enums.BookingStatus;
-    id: number;
-    createdAt: string;
-    updatedAt: string;
-  } = {
-    userId: 0,
-    startTime: "",
-    endTime: "",
-    roomId: 0,
-    status: "UPCOMING",
-    id: 0,
-    createdAt: "",
-    updatedAt: "",
-  };
+
   if (query.data) {
-    data = query.data;
   }
 
   const mutation = trpc.booking.create.useMutation({
@@ -72,30 +53,38 @@ export default function HomeScreen() {
     }
   };
 
-  const dateString = data.startTime;
-  const enddatesString = data.endTime;
-  const startTime = Converter.formatDate(dateString);
-  const endTime = Converter.formatDate(enddatesString);
-
   return (
     <View>
       <StyledButton>
-        <View justifyContent="center">
-          <View>
-            <StyledTitle>Booking</StyledTitle>
-            <Text width={75}>Room {data?.roomId}</Text>
-          </View>
-          <View>
-            <Text>Start: {startTime}</Text>
-            <Text>End: {endTime}</Text>
-          </View>
+        <View>
+          {query.data && (
+            <>
+              <View justifyContent="center">
+                <StyledTitle>Booking</StyledTitle>
+                <Text>Room {query.data.room.name}</Text>
+              </View>
+              <View>
+                <Text>Start: {Converter.formatDate(query.data.startTime)}</Text>
+                <Text>End: {Converter.formatDate(query.data.endTime)}</Text>
+              </View>
+            </>
+          )}
         </View>
+        <Button
+          onPress={() =>
+            router.push({
+              pathname: "/navigation",
+              params: { roomId: query.data!.roomId },
+            })
+          }
+        >
+          <Compass />
+        </Button>
       </StyledButton>
       <StyledBookingButton onPress={() => router.push("/booking/")}>
         Book a room
       </StyledBookingButton>
       <StyledSeparator />
-      <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
     </View>
   );
 }
@@ -122,6 +111,7 @@ const StyledButton = styled(Button, {
   height: 200,
   width: 350,
   backgroundColor: "darkgrey",
+  flexDirection: "column",
 });
 
 const StyledBookingButton = styled(Button, {

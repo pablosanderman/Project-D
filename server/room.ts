@@ -34,6 +34,7 @@ export const roomRouter = router({
     .input(
       z.object({
         type: z.enum(["MEETING", "FOCUS", "DESK"]),
+
         capacity: z.number(),
       })
     )
