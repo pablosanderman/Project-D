@@ -1,15 +1,17 @@
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { Text, View, Button } from "tamagui";
-import { trpc } from "@/utils/trpc";
-import { Link, router } from "expo-router";
-import { $Enums } from "@prisma/client";
 import { formatDate } from "@/utils/converters";
-import { AlignCenter } from "@tamagui/lucide-icons";
+import { trpc } from "@/utils/trpc";
+import { $Enums } from "@prisma/client";
+import { router } from "expo-router";
+import { useContext } from "react";
+import { Button, Text, View } from "tamagui";
+import { AuthContext } from "../_layout";
 
 export default function HomeScreen() {
+  const { userId } = useContext(AuthContext);
   const utils = trpc.useUtils();
-  const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
+  const query = trpc.booking.getMostRecentBooking.useQuery({ userId: userId! });
   let data: {
     userId: number;
     startTime: string;

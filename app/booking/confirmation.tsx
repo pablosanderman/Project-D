@@ -1,12 +1,14 @@
-import { Button, View } from "tamagui";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
-import { RoomType, RoomSize, Booking, Room } from "@prisma/client";
+import { Booking } from "@prisma/client";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { View } from "tamagui";
 
 import { Text } from "tamagui";
+import { AuthContext } from "../_layout";
 
 export default function Confirmation() {
+  const { userId } = useContext(AuthContext);
   const [newBooking, setNewBooking] = useState<Booking | null>(null);
   useEffect(() => {
     (async () => {
@@ -31,7 +33,7 @@ export default function Confirmation() {
   // Hardcoded values for demonstration purposes: userId: 1, roomId: 50
   const createBooking = async () => {
     const booking = await mutation.mutateAsync({
-      userId: 1,
+      userId: userId!,
       startTime: new Date().toISOString(),
       endTime: new Date().toISOString(),
       roomId: 50,

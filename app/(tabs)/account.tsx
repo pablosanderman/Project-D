@@ -1,18 +1,26 @@
-import { Button, FlatList, StyleSheet } from "react-native";
+import { Button, StyleSheet } from "react-native";
 
 import { trpc } from "@/utils/trpc";
 import { router } from "expo-router";
+import { useContext } from "react";
 import { Text, View } from "tamagui";
+import { AuthContext } from "../_layout";
 
 export default function AccountScreen() {
-  const user = trpc.user.get.useQuery(1);
+  const { userId } = useContext(AuthContext);
+  const user = trpc.user.get.useQuery(userId!);
 
   return (
     <View style={styles.container}>
       <Text style={styles.separator}></Text>
       {user.data && <Text style={styles.title}>{user.data.name}</Text>}
       <View>
-        <Button title="Log in" onPress={() => {router.push("./LoginScreen")}} />
+        <Button
+          title="Log in"
+          onPress={() => {
+            router.push("./LoginScreen");
+          }}
+        />
       </View>
     </View>
   );

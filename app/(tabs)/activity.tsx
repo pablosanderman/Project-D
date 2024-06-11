@@ -1,27 +1,27 @@
 import { FlatList, StyleSheet } from "react-native";
 
-import { trpc } from "@/utils/trpc";
 import type { AppRouter } from "@/server";
-import { useState } from "react";
+import { formatDate } from "@/utils/converters";
+import { trpc } from "@/utils/trpc";
+import { inferRouterOutputs } from "@trpc/server";
+import { useContext } from "react";
 import {
-  ListItem,
   Button,
+  ListItem,
   Separator,
-  XStack,
-  YGroup,
-  styled,
   Text,
   View,
+  XStack,
+  YGroup,
 } from "tamagui";
-import { set } from "zod";
-import { Booking } from "@prisma/client";
-import { inferRouterOutputs } from "@trpc/server";
-import { formatDate } from "@/utils/converters";
+import { AuthContext } from "../_layout";
 
 const lang = "nl-NL";
 
 export default function ActivityScreen() {
-  const query = trpc.booking.get.useQuery({ userId: 1, filter: {} });
+  const { userId } = useContext(AuthContext);
+
+  const query = trpc.booking.get.useQuery({ userId: userId!, filter: {} });
   type routerOutput = inferRouterOutputs<AppRouter>;
   type bookingGetOutput = routerOutput["booking"]["get"][0];
   // const [filterState, setFilterState] = useState<any>(noFilter);

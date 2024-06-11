@@ -1,6 +1,6 @@
-import { router, publicProcedure, createCallerFactory } from "../trpc";
-import z from "zod";
 import prisma from "@/utils/prisma";
+import z from "zod";
+import { createCallerFactory, publicProcedure, router } from "../trpc";
 
 export const userRouter = router({
   create: publicProcedure
@@ -18,19 +18,25 @@ export const userRouter = router({
         data: input,
       });
     }),
-    doesUserExist: publicProcedure.input(z.object({
-      email: z.string().email(),
-      name: z.string(),
-      surname: z.string(),
-    })).query(async (opts) => {
+  doesUserExist: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        name: z.string(),
+        surname: z.string(),
+      })
+    )
+    .query(async (opts) => {
       const { input } = opts;
-      return await prisma.user.findFirst({
-        where: {
-          email: input.email,
-          name: input.name,
-          surname: input.surname,
-        },
-      }) !== undefined;
+      return (
+        (await prisma.user.findFirst({
+          where: {
+            email: input.email,
+            name: input.name,
+            surname: input.surname,
+          },
+        })) !== undefined
+      );
     }),
   get: publicProcedure.input(z.number()).query(async (opts) => {
     const { input } = opts;
@@ -40,6 +46,17 @@ export const userRouter = router({
       },
     });
   }),
+  logIn: publicProcedure
+    .input(z.object({ email: z.string().email(), password: z.string() }))
+    .query(async (opts) => {
+      const { input } = opts;
+      return await prisma.user.findFirst({
+        where: {
+          email: input.email,
+          password: input.password,
+        },
+      });
+    }),
   getUserBookings: publicProcedure.input(z.number()).query(async (opts) => {
     const { input } = opts;
     const user = await prisma.user.findUnique({
