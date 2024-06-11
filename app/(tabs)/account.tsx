@@ -1,9 +1,14 @@
 import { trpc } from "@/utils/trpc";
+import { router } from "expo-router";
+import { useContext } from "react";
+import { AuthContext } from "../_layout";
 import { Text, Button, View, Separator, styled } from "tamagui";
 import { Settings, Info } from "@tamagui/lucide-icons";
 
 export default function AccountScreen() {
-  const user = trpc.user.get.useQuery(1);
+  const { userId } = useContext(AuthContext);
+  const user = trpc.user.get.useQuery(userId!);
+
   return (
     <StyledContainer>
       {user.data && (
@@ -13,6 +18,13 @@ export default function AccountScreen() {
       )}
       <StyledSeparator />
       <View gap={"$3"}>
+        <Button
+          onPress={() => {
+            router.push("./LoginScreen");
+          }}
+        >
+          Log In
+        </Button>
         <Button>
           <Settings></Settings>Settings
         </Button>

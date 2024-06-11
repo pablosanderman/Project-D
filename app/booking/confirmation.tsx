@@ -1,35 +1,29 @@
-import {
-  Button,
-  Text,
-  View,
-  AlertDialog,
-  styled,
-  XStack,
-  YStack,
-} from "tamagui";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
+import { Booking } from "@prisma/client";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { AlertDialog, Button, View, styled } from "tamagui";
+
+import { Text } from "tamagui";
+import { AuthContext } from "../_layout";
 import { Converter } from "@/utils/converter";
 import {
-  MapPin,
-  LampDesk,
   Calendar,
   Clock,
+  LampDesk,
+  MapPin,
   Users,
-  CheckCircle,
 } from "@tamagui/lucide-icons";
 
-function RecommendRoom() {
-  // placeholder function
-  return {
-    roomId: 50,
-    roomName: "PL 05.18",
-    floor: 1,
-  };
-}
-
 export default function Confirmation() {
+  const { userId } = useContext(AuthContext);
+  const [newBooking, setNewBooking] = useState<Booking | null>(null);
+  useEffect(() => {
+    (async () => {
+      createBooking();
+    })();
+  }, []);
+
   const utils = trpc.useUtils();
 
   const { roomType, roomSize, startTime, endTime } = useLocalSearchParams<{
@@ -70,12 +64,12 @@ export default function Confirmation() {
   });
 
   const createBooking = async () => {
-    await mutation.mutateAsync({
-      userId: 1,
-      startTime: startTime as string,
-      endTime: endTime as string,
-      roomId: recommendation.roomId,
-      status: "UPCOMING",
+    const booking = await mutation.mutateAsync({
+      userId: userId!,
+      startTime: new Date().toISOString(),
+      endTime: new Date().toISOString(),
+      roomId: 50,
+      status: "IN_PROGRESS",
     });
   };
 

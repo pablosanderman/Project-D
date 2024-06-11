@@ -1,14 +1,35 @@
-import { Converter } from "@/utils/converter";
 import { trpc } from "@/utils/trpc";
-import { Compass } from "@tamagui/lucide-icons";
+import { $Enums } from "@prisma/client";
 import { router } from "expo-router";
+import { useContext } from "react";
 import { Button, Separator, Text, View, styled } from "tamagui";
+import { AuthContext } from "../_layout";
+import { Compass } from "@tamagui/lucide-icons";
+import { Converter } from "@/utils/converter";
 
 export default function HomeScreen() {
+  const { userId } = useContext(AuthContext);
   const utils = trpc.useUtils();
-
-  const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
-
+  const query = trpc.booking.getMostRecentBooking.useQuery({ userId: userId! });
+  let data: {
+    userId: number;
+    startTime: string;
+    endTime: string;
+    roomId: number;
+    status: $Enums.BookingStatus;
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+  } = {
+    userId: 0,
+    startTime: "",
+    endTime: "",
+    roomId: 0,
+    status: "UPCOMING",
+    id: 0,
+    createdAt: "",
+    updatedAt: "",
+  };
   if (query.data) {
   }
 
@@ -31,7 +52,7 @@ export default function HomeScreen() {
     //filter rooms that are not booked at the desired time
     const availableRooms = rooms.filter((room) => {
       const overlappingBooking = bookings.find(
-        (booking) => booking.roomId === room.id
+        (booking) => booking.roomId === room.id,
         // booking.startTime < new Date().toISOString() &&
         // booking.endTime > new Date().toISOString()
       );

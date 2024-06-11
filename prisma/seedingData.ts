@@ -15,6 +15,7 @@
 //   id        Int       @id @default(autoincrement())
 //   email     String    @unique
 //   name      String?
+//   password  String
 //   bookings  Booking[]
 //   createdAt DateTime  @default(now())
 //   updatedAt DateTime  @updatedAt
@@ -46,6 +47,7 @@
 // }
 
 import { BookingStatus, RoomType } from "@prisma/client";
+import { CloudSunRain } from "@tamagui/lucide-icons";
 
 const bookings = [
   {
@@ -74,15 +76,21 @@ const bookings = [
 const users = [
   {
     email: "john.doe@gmail.com",
-    name: "John Doe",
+    name: "John",
+    password: "john'spassword",
+    surname: "Doe",
   },
   {
     email: "jane.doe@gmail.com",
-    name: "Jane Doe",
+    name: "Jane",
+    password: "jane'spassword",
+    surname: "Doe",
   },
   {
     email: "bob.doe@gmail.com",
-    name: "Bob Doe",
+    name: "Bob",
+    password: "Bobspassword",
+    surname: "Doe",
   },
 ];
 
