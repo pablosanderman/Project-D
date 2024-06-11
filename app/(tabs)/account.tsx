@@ -22,23 +22,22 @@ export default function AccountScreen() {
           }}
         />
       </View>
-    </View>
+    </StyledContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
+const StyledContainer = styled(View, {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+});
+const StyledTitle = styled(Text, {
+  fontSize: 20,
+  fontWeight: "bold",
+});
+
+const StyledSeparator = styled(Separator, {
+  marginVertical: 30,
+  height: 1,
+  width: "80%",
 });

@@ -1,7 +1,7 @@
-import { router, publicProcedure, createCallerFactory } from "../trpc";
-import z from "zod";
 import prisma from "@/utils/prisma";
-import { BookingStatus, RoomSize, RoomType } from "@prisma/client";
+import { BookingStatus } from "@prisma/client";
+import z from "zod";
+import { createCallerFactory, publicProcedure, router } from "../trpc";
 
 export const bookingRouter = router({
   create: publicProcedure
@@ -16,9 +16,11 @@ export const bookingRouter = router({
     )
     .mutation(async (opts) => {
       const { input } = opts;
-      return await prisma.booking.create({
-        data: input,
-      });
+      return await prisma.$transaction([
+        prisma.booking.create({
+          data: input,
+        }),
+      ]);
     }),
   get: publicProcedure
     .input(
@@ -32,14 +34,7 @@ export const bookingRouter = router({
           endDate: z.string().datetime().optional(),
           room: z.number().optional(),
           RoomType: z.enum(["MEETING", "FOCUS", "DESK"]).optional(),
-          RoomSize: z
-            .enum([
-              "ONE_TO_TWO",
-              "TWO_TO_FOUR",
-              "FOUR_TO_EIGHT",
-              "EIGHT_TO_SIXTEEN",
-            ])
-            .optional(),
+          Capacity: z.number().optional(),
         }),
       })
     )
@@ -49,14 +44,28 @@ export const bookingRouter = router({
         where: {
           userId: userId,
           status: filter.status,
-          startTime: {
-            gte: filter.startDate,
-            lte: filter.endDate,
-          },
+          OR: [
+            {
+              startTime: {
+                lte: filter.endDate,
+              },
+              endTime: {
+                gte: filter.startDate,
+              },
+            },
+            {
+              startTime: {
+                gte: filter.startDate,
+              },
+              endTime: {
+                lte: filter.endDate,
+              },
+            },
+          ],
           roomId: filter.room,
           room: {
             type: filter.RoomType,
-            size: filter.RoomSize,
+            capacity: filter.Capacity,
           },
         },
         include: {
@@ -73,8 +82,16 @@ export const bookingRouter = router({
         where: {
           userId: userId,
         },
+        include: {
+          user: true,
+          room: true,
+        },
         orderBy: {
           startTime: "desc",
+        },
+        include: {
+          user: true,
+          room: true,
         },
       });
     }),
