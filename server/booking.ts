@@ -12,7 +12,7 @@ export const bookingRouter = router({
         endTime: z.string().datetime(),
         roomId: z.number(),
         status: z.enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"]),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { input } = opts;
@@ -26,46 +26,36 @@ export const bookingRouter = router({
     .input(
       z.object({
         userId: z.number(),
-        filter: z.object({
-          status: z
-            .enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"])
-            .optional(),
-          startDate: z.string().datetime().optional(),
-          endDate: z.string().datetime().optional(),
-          room: z.number().optional(),
-          RoomType: z.enum(["MEETING", "FOCUS", "DESK"]).optional(),
-          Capacity: z.number().optional(),
-        }),
-      })
+        filter: z
+          .object({
+            status: z
+              .enum(["CANCELLED", "CONFIRMED", "UPCOMING", "IN_PROGRESS"])
+              .optional(),
+            startDate: z.string().datetime().optional(),
+            endDate: z.string().datetime().optional(),
+            room: z.number().optional(),
+            RoomType: z.enum(["MEETING", "FOCUS", "DESK"]).optional(),
+            Capacity: z.number().optional(),
+          })
+          .optional(),
+      }),
     )
     .query(async (opts) => {
       const { userId, filter } = opts.input;
       return await prisma.booking.findMany({
         where: {
           userId: userId,
-          status: filter.status,
-          OR: [
-            {
-              startTime: {
-                lte: filter.endDate,
-              },
-              endTime: {
-                gte: filter.startDate,
-              },
-            },
-            {
-              startTime: {
-                gte: filter.startDate,
-              },
-              endTime: {
-                lte: filter.endDate,
-              },
-            },
-          ],
-          roomId: filter.room,
+          status: filter?.status,
+          startTime: {
+            lte: filter?.endDate,
+          },
+          endTime: {
+            gte: filter?.startDate,
+          },
+          roomId: filter?.room,
           room: {
-            type: filter.RoomType,
-            capacity: filter.Capacity,
+            type: filter?.RoomType,
+            capacity: filter?.Capacity,
           },
         },
         include: {
@@ -100,7 +90,7 @@ export const bookingRouter = router({
       z.object({
         id: z.number(),
         status: z.string(),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { id, status } = opts.input;

@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "tamagui";
-import { AuthContext } from "../_layout";
+import { AuthContext } from "./_layout";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");

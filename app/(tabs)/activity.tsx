@@ -1,14 +1,13 @@
 import { FlatList } from "react-native";
 
-import type { AppRouter } from "@/server";
 import { trpc } from "@/utils/trpc";
-import { inferRouterOutputs } from "@trpc/server";
 import { useContext } from "react";
 import {
   Button,
   ListItem,
   Separator,
   Text,
+  ToggleGroup,
   View,
   XStack,
   YGroup,
@@ -21,19 +20,8 @@ import { Converter } from "@/utils/converter";
 export default function ActivityScreen() {
   const { userId } = useContext(AuthContext);
 
-  const query = trpc.booking.get.useQuery({ userId: userId!, filter: {} });
-  type routerOutput = inferRouterOutputs<AppRouter>;
-  type bookingGetOutput = routerOutput["booking"]["get"][0];
-  // const [filterState, setFilterState] = useState<any>(noFilter);
-  // function noFilter(item: bookingGetOutput): boolean {
-  //   return true;
-  // }
-  // function setFilterPast() {
-  //   setFilterState(FilterPast);
-  // }
-  // function FilterPast(item: bookingGetOutput): Boolean {r
-  //   return new Date(item.startTime) < new Date();
-  // }
+  const query = trpc.booking.get.useQuery({ userId: userId });
+
   const time = new Date();
   time.setHours(time.getHours() + 8);
 
@@ -41,87 +29,51 @@ export default function ActivityScreen() {
   timeBack.setHours(timeBack.getHours() - 8);
 
   return (
-    <StyledContainer>
+    <View>
       {query.data && (
         <View>
-          <View>
-            <XStack gap={"$3"}>
-              <Button
-                width={"30%"}
-                paddingHorizontal={10}
-                onPress={() =>
-                  setFilterState((prev) => ({
-                    ...prev,
-                    filter: {
-                      startDate: new Date(0).toISOString(),
-                      endDate: timeBack.toISOString(),
-                    },
-                  }))
-                }
-              >
-                PAST
-              </Button>
-              <Button
-                width={"30%"}
-                paddingHorizontal={0}
-                onPress={() =>
-                  setFilterState((prev) => ({
-                    ...prev,
-                    filter: {
-                      startDate: new Date().toISOString(),
-                      endDate: time.toISOString(),
-                    },
-                  }))
-                }
-              >
-                ACTIVE
-              </Button>
-              <Button
-                width={"30%"}
-                paddingHorizontal={0}
-                onPress={() =>
-                  setFilterState((prev) => ({
-                    ...prev,
-                    filter: { startDate: new Date().toISOString() },
-                  }))
-                }
-              >
-                UPCOMING
-              </Button>
-            </XStack>
-          </View>
+          <ToggleGroup type={"single"} width={"100%"}>
+            <ToggleGroup.Item value="left" aria-label="Left aligned">
+              <Text>Past</Text>
+            </ToggleGroup.Item>
+            <ToggleGroup.Item value="center" aria-label="Center aligned">
+              <Text>Active</Text>
+            </ToggleGroup.Item>
+            <ToggleGroup.Item value="right" aria-label="Right aligned">
+              <Text>Upcoming</Text>
+            </ToggleGroup.Item>
+          </ToggleGroup>
           <XStack>
-            <YGroup width={"97%"} maxHeight={"95%"}>
+            <YGroup width={"100%"}>
               <FlatList
                 data={query.data.filter((item) => item)}
-                renderItem={({ item }) => (
+                renderItem={({ item: booking }) => (
                   <YGroup.Item>
-                    <ListItem
-                      title={"Booking no." + item.id}
-                      marginBottom={"$2"}
-                      backgroundColor={"grey"}
+                    <View
+                      backgroundColor={"$gray3Dark"}
+                      borderRadius={"$6"}
+                      p="$4"
+                      mb="$2"
                     >
-                      <StyledSeparator />
-                      <Text>Room {item.roomId}</Text>
+                      <Text>Room {booking.room.name}</Text>
                       <Text>
                         At{" "}
                         <Text fontWeight={"bold"}>
                           {Converter.formatFromTimeToTime(
-                            item.startTime,
-                            item.endTime,
+                            booking.startTime,
+                            booking.endTime,
                           )}
                         </Text>{" "}
                         on{" "}
                         <Text fontWeight={"bold"}>
-                          {Converter.formatDate(item.startTime)}
+                          {Converter.formatDate(booking.startTime)}
                         </Text>
                       </Text>
                       <Text>
-                        Booking status:{" "}
-                        {Converter.convertBookingStatus(item.status)}
+                        Status: {Converter.convertBookingStatus(booking.status)}
                       </Text>
-                      <Text>Booked by: {item.user.name}</Text>
-                    </ListItem>
+                      <Text>Booked by: {booking.user.name}</Text>
+                    </View>
                   </YGroup.Item>
                 )}
               />
@@ -132,18 +84,6 @@ export default function ActivityScreen() {
 
       {query.isLoading && query.isFetching && <Text>Loading...</Text>}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}
-    </StyledContainer>
+    </View>
   );
 }
-
-const StyledContainer = styled(View, {
-  flex: 1,
-  alignItems: "center",
-  justifyContent: "center",
-});
-
-const StyledSeparator = styled(Separator, {
-  marginVertical: "$2",
-  height: 1,
-  width: "80%",
-});

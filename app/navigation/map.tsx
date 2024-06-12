@@ -99,17 +99,19 @@ export const MapPicture = () => {
       />
       <Path
         d="M1296 1648H1157L1150 1776H1302L1296 1648Z"
-        fill="#A6A6A6"
+        fill="black"
         stroke="black"
         stroke-width="10"
       />
       <Path
         d="M856.426 1140.62L925.926 1020.24L818.574 950.182L742.574 1081.82L856.426 1140.62Z"
+        fill="black"
         stroke="black"
         stroke-width="10"
       />
       <Path
         d="M1522 1014.2L1591.5 1134.57L1705.85 1076.64L1629.85 945L1522 1014.2Z"
+        fill="black"
         stroke="black"
         stroke-width="10"
       />

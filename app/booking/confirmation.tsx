@@ -1,14 +1,15 @@
 import { trpc } from "@/utils/trpc";
 import { Booking } from "@prisma/client";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { AlertDialog, Button, View, styled } from "tamagui";
+import { AlertDialog, Button, View, XStack, YStack, styled } from "tamagui";
 
 import { Text } from "tamagui";
 import { AuthContext } from "../_layout";
 import { Converter } from "@/utils/converter";
 import {
   Calendar,
+  CheckCircle,
   Clock,
   LampDesk,
   MapPin,
@@ -50,7 +51,7 @@ export default function Confirmation() {
 
   const Name = recommendation.roomName;
   const Type = Converter.convertRoomType(roomType);
-  const Date = Converter.formatDate(startTime);
+  const Bate = Converter.formatDate(startTime);
   const Time = Converter.formatFromTimeToTime(startTime, endTime);
   const Size = Converter.convertRoomSize(roomSize);
 
@@ -94,7 +95,7 @@ export default function Confirmation() {
         </InfoItem>
         <InfoItem>
           <Calendar />
-          <Text>{Date}</Text>
+          <Text>{Bate}</Text>
         </InfoItem>
         <InfoItem>
           <Clock />
