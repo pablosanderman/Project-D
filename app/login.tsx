@@ -1,6 +1,6 @@
 import { trpc } from "@/utils/trpc";
-import { router } from "expo-router";
-import React, { useState } from "react";
+import { router, useNavigation } from "expo-router";
+import React, { useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "tamagui";
 import { AuthContext } from "./_layout";
@@ -10,6 +10,15 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const { userId, setUserId } = React.useContext(AuthContext);
   const query = trpc.user.logIn.useQuery({ email, password });
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Log in",
+      headerBackTitle: "Account",
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

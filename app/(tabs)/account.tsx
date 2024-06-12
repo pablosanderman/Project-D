@@ -15,7 +15,10 @@ export default function AccountScreen() {
     <StyledContainer>
       {user.data && (
         <View>
-          <StyledTitle>{user.data.name}</StyledTitle>
+          <StyledTitle>
+            {user.data.name} {user.data.surname}
+          </StyledTitle>
+          <Text>{user.data.email}</Text>
           {debug && <Text color={"red"}>{user.data.id}</Text>}
         </View>
       )}
@@ -27,7 +30,7 @@ export default function AccountScreen() {
           }}
         >
           <KeyRound />
-          Log In
+          Sign out
         </Button>
       </View>
     </StyledContainer>

@@ -29,7 +29,7 @@ export default function ActivityScreen() {
   timeBack.setHours(timeBack.getHours() - 8);
 
   return (
-    <View>
+    <View mt="$4" mx="$2">
       {query.data && (
         <View>
           <ToggleGroup type={"single"} width={"100%"}>
@@ -43,7 +43,7 @@ export default function ActivityScreen() {
               <Text>Upcoming</Text>
             </ToggleGroup.Item>
           </ToggleGroup>
-          <XStack>
+          <XStack mt="$2">
             <YGroup width={"100%"}>
               <FlatList
                 data={query.data.filter((item) => item)}
@@ -72,7 +72,12 @@ export default function ActivityScreen() {
                       <Text>
                         Status: {Converter.convertBookingStatus(booking.status)}
                       </Text>
-                      <Text>Booked by: {booking.user.name}</Text>
+                      <Text>
+                        Booked by:{" "}
+                        {booking.userId === userId
+                          ? "You"
+                          : booking.user.name + " " + booking.user.surname}
+                      </Text>
                     </View>
                   </YGroup.Item>
                 )}

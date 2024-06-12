@@ -16,7 +16,7 @@ export default function HomeScreen() {
   });
 
   return (
-    <View rowGap="$2">
+    <View rowGap="$2" mt="$4" mx="$2">
       {query.data?.map((booking) => (
         <View
           key={booking.id}
@@ -25,8 +25,9 @@ export default function HomeScreen() {
           height={"$12"}
           p="$4"
         >
-          <Text>
-            {prettyRoomType(booking.room.type)} {booking.room.name}
+          <Text marginBottom={"$1"}>
+            <Text fontWeight={"bold"}>{prettyRoomType(booking.room.type)}</Text>{" "}
+            {booking.room.name}
           </Text>
           <Text>
             {Converter.formatTime(booking.startTime)}-
