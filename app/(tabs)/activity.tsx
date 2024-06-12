@@ -1,21 +1,9 @@
-import { FlatList } from "react-native";
-
 import { trpc } from "@/utils/trpc";
-import { useContext } from "react";
-import {
-  Button,
-  ListItem,
-  Separator,
-  Text,
-  ToggleGroup,
-  View,
-  XStack,
-  YGroup,
-  styled,
-} from "tamagui";
+import { useContext, useState } from "react";
+import { Button, Text, View, XStack, YStack } from "tamagui";
 import { AuthContext } from "../_layout";
-
 import { Converter } from "@/utils/converter";
+import Card from "@/components/Card";
 
 export default function ActivityScreen() {
   const { userId } = useContext(AuthContext);
@@ -28,64 +16,75 @@ export default function ActivityScreen() {
   const timeBack = new Date();
   timeBack.setHours(timeBack.getHours() - 8);
 
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
   return (
     <View mt="$4" mx="$2">
-      {query.data && (
-        <View>
-          <ToggleGroup type={"single"} width={"100%"}>
-            <ToggleGroup.Item value="left" aria-label="Left aligned">
-              <Text>Past</Text>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item value="center" aria-label="Center aligned">
-              <Text>Active</Text>
-            </ToggleGroup.Item>
-            <ToggleGroup.Item value="right" aria-label="Right aligned">
-              <Text>Upcoming</Text>
-            </ToggleGroup.Item>
-          </ToggleGroup>
-          <XStack mt="$2">
-            <YGroup width={"100%"}>
-              <FlatList
-                data={query.data.filter((item) => item)}
-                renderItem={({ item: booking }) => (
-                  <YGroup.Item>
-                    <View
-                      backgroundColor={"$gray3Dark"}
-                      borderRadius={"$6"}
-                      p="$4"
-                      mb="$2"
-                    >
-                      <Text>Room {booking.room.name}</Text>
-                      <Text>
-                        At{" "}
-                        <Text fontWeight={"bold"}>
-                          {Converter.formatFromTimeToTime(
-                            booking.startTime,
-                            booking.endTime,
-                          )}
-                        </Text>{" "}
-                        on{" "}
-                        <Text fontWeight={"bold"}>
-                          {Converter.formatDate(booking.startTime)}
-                        </Text>
-                      </Text>
-                      <Text>
-                        Status: {Converter.convertBookingStatus(booking.status)}
-                      </Text>
-                      <Text>
-                        Booked by:{" "}
-                        {booking.userId === userId
-                          ? "You"
-                          : booking.user.name + " " + booking.user.surname}
-                      </Text>
-                    </View>
-                  </YGroup.Item>
-                )}
-              />
-            </YGroup>
-          </XStack>
-        </View>
-      )}
+      <View>
+        <XStack width={"100%"} flex={1} justifyContent="space-between">
+          <Button
+            width={"33%"}
+            onPress={() => setStatusFilter("ALL")}
+            backgroundColor={statusFilter === "ALL" ? "$gray8" : "$background"}
+          >
+            All
+          </Button>
+          <Button
+            width={"33%"}
+            onPress={() => setStatusFilter("IN_PROGRESS")}
+            backgroundColor={
+              statusFilter === "IN_PROGRESS" ? "$gray8" : "$background"
+            }
+          >
+            Active
+          </Button>
+          <Button
+            width={"33%"}
+            onPress={() => setStatusFilter("UPCOMING")}
+            backgroundColor={
+              statusFilter === "UPCOMING" ? "$gray8" : "$background"
+            }
+          >
+            Upcoming
+          </Button>
+        </XStack>
+      </View>
+      <View mt="$10">
+        <YStack width={"100%"} gap="$2">
+          {query.data
+            ?.filter(
+              (booking) =>
+                booking.status === statusFilter || statusFilter === "ALL",
+            )
+            .map((booking) => (
+              <Card borderRadius={"$4"} key={booking.id}>
+                <Text>Room {booking.room.name}</Text>
+                <Text>
+                  At{" "}
+                  <Text fontWeight={"bold"}>
+                    {Converter.formatFromTimeToTime(
+                      booking.startTime,
+                      booking.endTime,
+                    )}
+                  </Text>{" "}
+                  on{" "}
+                  <Text fontWeight={"bold"}>
+                    {Converter.formatDate(booking.startTime)}
+                  </Text>
+                </Text>
+                <Text>
+                  Status: {Converter.convertBookingStatus(booking.status)}
+                </Text>
+                <Text>
+                  Booked by:{" "}
+                  {booking.userId === userId
+                    ? "You"
+                    : booking.user.name + " " + booking.user.surname}
+                </Text>
+              </Card>
+            ))}
+        </YStack>
+      </View>
 
       {query.isLoading && query.isFetching && <Text>Loading...</Text>}
       {query.error && <Text>Something went wrong! {query.error.message}</Text>}

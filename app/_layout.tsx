@@ -18,7 +18,7 @@ import { tamaguiConfig } from "../tamagui.config";
 
 export const AuthContext = createContext({
   userId: 1,
-  setUserId: (foo: number) => {},
+  setUserId: (_: number) => {},
 });
 
 export default function RootLayout() {

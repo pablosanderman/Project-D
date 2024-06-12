@@ -6,6 +6,7 @@ import { prettyRoomType } from "@/utils/prettyRoomType";
 import { router } from "expo-router";
 import { trpc } from "@/utils/trpc";
 import { useContext } from "react";
+import Card from "@/components/Card";
 
 export default function HomeScreen() {
   const { userId } = useContext(AuthContext);
@@ -18,13 +19,7 @@ export default function HomeScreen() {
   return (
     <View rowGap="$2" mt="$4" mx="$2">
       {query.data?.map((booking) => (
-        <View
-          key={booking.id}
-          backgroundColor={"$gray3Dark"}
-          borderRadius={"$6"}
-          height={"$12"}
-          p="$4"
-        >
+        <Card height={"$12"} key={booking.id}>
           <Text marginBottom={"$1"}>
             <Text fontWeight={"bold"}>{prettyRoomType(booking.room.type)}</Text>{" "}
             {booking.room.name}
@@ -50,7 +45,7 @@ export default function HomeScreen() {
           >
             <Compass />
           </Button>
-        </View>
+        </Card>
       ))}
       <Button onPress={() => router.push("/booking/")}>Book a room</Button>
     </View>
