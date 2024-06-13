@@ -138,7 +138,6 @@ export default function Confirmation() {
           </AlertDialog.Content>
         </AlertDialog.Portal>
       </AlertDialog>
-      {/* {error && <Text>Error: {error}</Text>} */}
     </MainContainer>
   );
 }

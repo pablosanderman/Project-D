@@ -73,6 +73,20 @@ export const roomRouter = router({
       });
       return rooms[0];
     }),
+  RoomsBasedOnRoomType: publicProcedure
+    .input(
+      z.object({
+        type: z.enum(["MEETING", "FOCUS", "DESK"]),
+      })
+    )
+    .query(async (opts) => {
+      const { input } = opts;
+      return await prisma.room.findMany({
+        where: {
+          type: input.type,
+        },
+      });
+    }),
 });
 
 // 1. create a caller-function for your router
