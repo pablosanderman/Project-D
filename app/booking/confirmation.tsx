@@ -8,7 +8,7 @@ import {
   YStack,
 } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { Converter } from "@/utils/converter";
 import {
@@ -19,15 +19,7 @@ import {
   Users,
   CheckCircle,
 } from "@tamagui/lucide-icons";
-
-function RecommendRoom() {
-  // placeholder function
-  return {
-    roomId: 50,
-    roomName: "PL 05.18",
-    floor: 1,
-  };
-}
+import { RoomType } from "@prisma/client";
 
 export default function Confirmation() {
   const utils = trpc.useUtils();
@@ -43,38 +35,28 @@ export default function Confirmation() {
     startTime: string;
     endTime: string;
   };
-  const [recommendation, setRecommendation] = useState({
-    roomId: 0,
-    roomName: "",
-    floor: 0,
-  });
-  useEffect(() => {
-    const recommendedRoom = RecommendRoom();
-    setRecommendation(recommendedRoom);
-  }, []);
-  const [error, setError] = useState<string | null>(null);
 
-  const Name = recommendation.roomName;
-  const Type = Converter.convertRoomType(roomType);
-  const Date = Converter.formatDate(startTime);
-  const Time = Converter.formatFromTimeToTime(startTime, endTime);
-  const Size = Converter.convertRoomSize(roomSize);
+  const query = trpc.room.nextAvailable.useQuery({
+    type: roomType as RoomType,
+    capacity: parseInt(roomSize),
+    startTime: startTime,
+    endTime: endTime,
+  });
+
+  console.log(query);
 
   const mutation = trpc.booking.create.useMutation({
     onSuccess() {
       utils.booking.invalidate();
-    },
-    onError(err) {
-      setError(err.message);
     },
   });
 
   const createBooking = async () => {
     await mutation.mutateAsync({
       userId: 1,
-      startTime: startTime as string,
-      endTime: endTime as string,
-      roomId: recommendation.roomId,
+      startTime: startTime,
+      endTime: endTime,
+      roomId: query.data!.id,
       status: "UPCOMING",
     });
   };
@@ -92,23 +74,23 @@ export default function Confirmation() {
         <Header>Booking details</Header>
         <InfoItem>
           <MapPin />
-          <Text>{Name}</Text>
+          <Text>{query.data?.name}</Text>
         </InfoItem>
         <InfoItem>
           <LampDesk />
-          <Text>{Type}</Text>
+          <Text>{query.data?.type}</Text>
         </InfoItem>
         <InfoItem>
           <Calendar />
-          <Text>{Date}</Text>
+          <Text>{startTime}</Text>
         </InfoItem>
         <InfoItem>
           <Clock />
-          <Text>{Time}</Text>
+          <Text>{endTime}</Text>
         </InfoItem>
         <InfoItem>
           <Users />
-          <Text>{Size}</Text>
+          <Text>{query.data?.capacity}</Text>
         </InfoItem>
       </InfoContainer>
       <AlertDialog>
@@ -156,7 +138,7 @@ export default function Confirmation() {
           </AlertDialog.Content>
         </AlertDialog.Portal>
       </AlertDialog>
-      {error && <Text>Error: {error}</Text>}
+      {/* {error && <Text>Error: {error}</Text>} */}
     </MainContainer>
   );
 }

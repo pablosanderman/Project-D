@@ -7,7 +7,6 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 
 import { Converter } from "@/utils/converter";
-import { set } from "zod";
 
 export default function DateTime() {
   const { roomType, roomSize } = useLocalSearchParams<{
@@ -52,24 +51,34 @@ export default function DateTime() {
 
     if (isStartTime) {
       setShowStartTimePicker(false);
-      const newStartTime = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        currentTime.getHours(),
-        currentTime.getMinutes()
-      );
+      const newStartTime = calculateTime(date, currentTime);
       setStartTime(newStartTime);
     } else {
       setShowEndTimePicker(false);
-      const newEndTime = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        currentTime.getHours(),
-        currentTime.getMinutes()
-      );
+      const newEndTime = calculateTime(date, currentTime);
       setEndTime(newEndTime);
+    }
+  };
+
+  const calculateTime = (date: Date, currentTime: Date): Date => {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      currentTime.getHours(),
+      currentTime.getMinutes()
+    );
+  };
+
+  const validateAndContinue = () => {
+    const currentTime = new Date();
+
+    if (endTime <= startTime) {
+      alert("End time must be after start time.");
+    } else if (startTime < currentTime) {
+      alert("Start time cannot be in the past.");
+    } else {
+      router.push(href);
     }
   };
 
@@ -115,7 +124,7 @@ export default function DateTime() {
               <DateTimePicker
                 value={startTime}
                 mode={"time"}
-                display={"default"}
+                display={"spinner"}
                 minuteInterval={5}
                 onChange={(event, selectedTime) =>
                   onChangeTime(event, selectedTime, true)
@@ -135,7 +144,7 @@ export default function DateTime() {
               <DateTimePicker
                 value={endTime}
                 mode={"time"}
-                display={"default"}
+                display={"spinner"}
                 minuteInterval={5}
                 onChange={(event, selectedTime) =>
                   onChangeTime(event, selectedTime, false)
@@ -146,9 +155,7 @@ export default function DateTime() {
         </TimePickerContainer>
       </DateTimePickerContainer>
       <ContinueContainer>
-        <ContinueButton onPress={() => router.push(href)}>
-          Continue
-        </ContinueButton>
+        <ContinueButton onPress={validateAndContinue}>Continue</ContinueButton>
       </ContinueContainer>
     </MainContainer>
   );
