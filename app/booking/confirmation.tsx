@@ -8,7 +8,7 @@ import {
   YStack,
 } from "tamagui";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import { trpc } from "@/utils/trpc";
 import { Converter } from "@/utils/converter";
 import {
@@ -36,14 +36,14 @@ export default function Confirmation() {
     endTime: string;
   };
 
+  const navigation = useNavigation();
+
   const query = trpc.room.nextAvailable.useQuery({
     type: roomType as RoomType,
     capacity: parseInt(roomSize),
     startTime: startTime,
     endTime: endTime,
   });
-
-  console.log(query);
 
   const mutation = trpc.booking.create.useMutation({
     onSuccess() {
@@ -61,7 +61,6 @@ export default function Confirmation() {
     });
   };
 
-  const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Confirm booking",
@@ -78,19 +77,19 @@ export default function Confirmation() {
         </InfoItem>
         <InfoItem>
           <LampDesk />
-          <Text>{query.data?.type}</Text>
+          <Text>{Converter.convertRoomType(roomType)}</Text>
         </InfoItem>
         <InfoItem>
           <Calendar />
-          <Text>{startTime}</Text>
+          <Text>{Converter.formatDate(startTime)}</Text>
         </InfoItem>
         <InfoItem>
           <Clock />
-          <Text>{endTime}</Text>
+          <Text>{Converter.formatFromTimeToTime(startTime, endTime)}</Text>
         </InfoItem>
         <InfoItem>
           <Users />
-          <Text>{query.data?.capacity}</Text>
+          <Text>{roomSize}</Text>
         </InfoItem>
       </InfoContainer>
       <AlertDialog>

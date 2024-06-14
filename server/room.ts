@@ -1,6 +1,7 @@
 import { router, publicProcedure, createCallerFactory } from "../trpc";
 import z from "zod";
 import prisma from "@/utils/prisma";
+import { TRPCError } from "@trpc/server";
 
 export const roomRouter = router({
   create: publicProcedure
@@ -64,13 +65,29 @@ export const roomRouter = router({
             gte: input.capacity,
           },
           bookings: {
-            none: {},
+            none: {
+              OR: [
+                {
+                  startTime: {
+                    lt: input.endTime,
+                  },
+                  endTime: {
+                    gt: input.startTime,
+                  },
+                },
+              ],
+            },
           },
         },
         orderBy: {
           floor: "asc",
         },
       });
+      if (rooms.length === 0) {
+        console.log("No rooms available");
+        return null;
+      }
+      console.log("GET request:", rooms[0]);
       return rooms[0];
     }),
   RoomsBasedOnRoomType: publicProcedure
