@@ -13,8 +13,9 @@ export default function HomeScreen() {
 
   const query = trpc.booking.get.useQuery({
     userId: userId,
-    filter: { status: "UPCOMING" },
-  });
+    filter: { status: "UPCOMING" }
+    
+  }, {refetchOnMount: true});
 
   return (
     <View rowGap="$2" mt="$4" mx="$2">
