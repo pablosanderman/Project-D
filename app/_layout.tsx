@@ -1,21 +1,25 @@
 import { trpc } from "@/utils/trpc";
-import { httpBatchLink } from "@trpc/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import "react-native-gesture-handler";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
 
 import { SplashScreen, Stack } from "expo-router";
 
 import { useColorScheme } from "react-native";
 
-import { TamaguiProvider, PortalProvider } from "tamagui";
-import { tamaguiConfig } from "../tamagui.config";
 import { useFonts } from "expo-font";
-import { useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
+import { TamaguiProvider } from "tamagui";
+import { tamaguiConfig } from "../tamagui.config";
+
+export const AuthContext = createContext({
+  userId: null,
+  setUserId: (foo: number) => {},
+});
 
 export default function RootLayout() {
   const queryClient = new QueryClient();
@@ -28,6 +32,9 @@ export default function RootLayout() {
   });
 
   const colorScheme = useColorScheme();
+
+  const [userId, setUserId] = useState<number | null>(1);
+  const value = { userId, setUserId };
 
   const [loaded] = useFonts({
     Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
@@ -49,11 +56,11 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
-            <PortalProvider>
+            <AuthContext.Provider value={value}>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack>
-            </PortalProvider>
+            </AuthContext.Provider>
           </QueryClientProvider>
         </trpc.Provider>
       </ThemeProvider>

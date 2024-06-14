@@ -1,6 +1,9 @@
 import { FlatList } from "react-native";
 
+import type { AppRouter } from "@/server";
 import { trpc } from "@/utils/trpc";
+import { inferRouterOutputs } from "@trpc/server";
+import { useContext } from "react";
 import {
   Button,
   ListItem,
@@ -11,15 +14,14 @@ import {
   YGroup,
   styled,
 } from "tamagui";
+import { AuthContext } from "../_layout";
 
-import { AppRouter } from "@/server";
 import { Converter } from "@/utils/converter";
-import { inferRouterOutputs } from "@trpc/server";
-import { useState } from "react";
 
 export default function ActivityScreen() {
-  const [filterState, setFilterState] = useState({ userId: 1, filter: {} });
-  const query = trpc.booking.get.useQuery(filterState);
+  const { userId } = useContext(AuthContext);
+
+  const query = trpc.booking.get.useQuery({ userId: userId!, filter: {} });
   type routerOutput = inferRouterOutputs<AppRouter>;
   type bookingGetOutput = routerOutput["booking"]["get"][0];
   // const [filterState, setFilterState] = useState<any>(noFilter);
@@ -106,7 +108,7 @@ export default function ActivityScreen() {
                         <Text fontWeight={"bold"}>
                           {Converter.formatFromTimeToTime(
                             item.startTime,
-                            item.endTime
+                            item.endTime,
                           )}
                         </Text>{" "}
                         on{" "}
