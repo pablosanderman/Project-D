@@ -1,13 +1,16 @@
-import { Converter } from "@/utils/converter";
 import { trpc } from "@/utils/trpc";
 import { $Enums } from "@prisma/client";
 import { router } from "expo-router";
+import { useContext } from "react";
 import { Button, Separator, Text, View, styled } from "tamagui";
+import { AuthContext } from "../_layout";
+import { Compass } from "@tamagui/lucide-icons";
+import { Converter } from "@/utils/converter";
 
 export default function HomeScreen() {
+  const { userId } = useContext(AuthContext);
   const utils = trpc.useUtils();
-
-  const query = trpc.booking.getMostRecentBooking.useQuery({ userId: 1 });
+  const query = trpc.booking.getMostRecentBooking.useQuery({ userId: userId! });
   let data: {
     userId: number;
     startTime: string;
@@ -28,7 +31,6 @@ export default function HomeScreen() {
     updatedAt: "",
   };
   if (query.data) {
-    data = query.data;
   }
 
   const mutation = trpc.booking.create.useMutation({
@@ -50,7 +52,7 @@ export default function HomeScreen() {
     //filter rooms that are not booked at the desired time
     const availableRooms = rooms.filter((room) => {
       const overlappingBooking = bookings.find(
-        (booking) => booking.roomId === room.id
+        (booking) => booking.roomId === room.id,
         // booking.startTime < new Date().toISOString() &&
         // booking.endTime > new Date().toISOString()
       );
@@ -72,30 +74,38 @@ export default function HomeScreen() {
     }
   };
 
-  const dateString = data.startTime;
-  const enddatesString = data.endTime;
-  const startTime = Converter.formatDate(dateString);
-  const endTime = Converter.formatDate(enddatesString);
-
   return (
     <View>
       <StyledButton>
-        <View justifyContent="center">
-          <View>
-            <StyledTitle>Booking</StyledTitle>
-            <Text width={75}>Room {data?.roomId}</Text>
-          </View>
-          <View>
-            <Text>Start: {startTime}</Text>
-            <Text>End: {endTime}</Text>
-          </View>
+        <View>
+          {query.data && (
+            <>
+              <View justifyContent="center">
+                <StyledTitle>Booking</StyledTitle>
+                <Text>Room {query.data.room.name}</Text>
+              </View>
+              <View>
+                <Text>Start: {Converter.formatDate(query.data.startTime)}</Text>
+                <Text>End: {Converter.formatDate(query.data.endTime)}</Text>
+              </View>
+            </>
+          )}
         </View>
+        <Button
+          onPress={() =>
+            router.push({
+              pathname: "/navigation",
+              params: { roomId: query.data!.roomId },
+            })
+          }
+        >
+          <Compass />
+        </Button>
       </StyledButton>
       <StyledBookingButton onPress={() => router.push("/booking/")}>
         Book a room
       </StyledBookingButton>
       <StyledSeparator />
-      <Button onPress={() => router.push("/navigation/")}>Navigation</Button>
     </View>
   );
 }
@@ -122,6 +132,7 @@ const StyledButton = styled(Button, {
   height: 200,
   width: 350,
   backgroundColor: "darkgrey",
+  flexDirection: "column",
 });
 
 const StyledBookingButton = styled(Button, {

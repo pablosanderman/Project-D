@@ -15,6 +15,7 @@
 //   id        Int       @id @default(autoincrement())
 //   email     String    @unique
 //   name      String?
+//   password  String
 //   bookings  Booking[]
 //   createdAt DateTime  @default(now())
 //   updatedAt DateTime  @updatedAt
@@ -50,22 +51,22 @@ import { BookingStatus, RoomType } from "@prisma/client";
 const bookings = [
   {
     userId: 1,
-    startTime: new Date(),
-    endTime: new Date(),
+    startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     roomId: 1,
-    status: BookingStatus.IN_PROGRESS,
+    status: BookingStatus.UPCOMING,
   },
   {
     userId: 2,
-    startTime: new Date(),
-    endTime: new Date(),
+    startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     roomId: 2,
     status: BookingStatus.CANCELLED,
   },
   {
     userId: 3,
-    startTime: new Date(),
-    endTime: new Date(),
+    startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     roomId: 3,
     status: BookingStatus.CONFIRMED,
   },
@@ -74,15 +75,21 @@ const bookings = [
 const users = [
   {
     email: "john.doe@gmail.com",
-    name: "John Doe",
+    name: "John",
+    password: "john'spassword",
+    surname: "Doe",
   },
   {
     email: "jane.doe@gmail.com",
-    name: "Jane Doe",
+    name: "Jane",
+    password: "jane'spassword",
+    surname: "Doe",
   },
   {
     email: "bob.doe@gmail.com",
-    name: "Bob Doe",
+    name: "Bob",
+    password: "Bobspassword",
+    surname: "Doe",
   },
 ];
 

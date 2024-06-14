@@ -1,35 +1,24 @@
-import {
-  Button,
-  Text,
-  View,
-  AlertDialog,
-  styled,
-  XStack,
-  YStack,
-} from "tamagui";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
+import { Booking } from "@prisma/client";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { AlertDialog, Button, View, XStack, YStack, styled } from "tamagui";
+
+import { Text } from "tamagui";
+import { AuthContext } from "../_layout";
 import { Converter } from "@/utils/converter";
 import {
-  MapPin,
-  LampDesk,
   Calendar,
-  Clock,
-  Users,
   CheckCircle,
+  Clock,
+  LampDesk,
+  MapPin,
+  Users,
 } from "@tamagui/lucide-icons";
-
-function RecommendRoom() {
-  // placeholder function
-  return {
-    roomId: 50,
-    roomName: "PL 05.18",
-    floor: 1,
-  };
-}
+import { RoomType } from "@prisma/client";
 
 export default function Confirmation() {
+  const { userId } = useContext(AuthContext);
   const utils = trpc.useUtils();
 
   const { roomType, roomSize, startTime, endTime } = useLocalSearchParams<{
@@ -43,43 +32,32 @@ export default function Confirmation() {
     startTime: string;
     endTime: string;
   };
-  const [recommendation, setRecommendation] = useState({
-    roomId: 0,
-    roomName: "",
-    floor: 0,
-  });
-  useEffect(() => {
-    const recommendedRoom = RecommendRoom();
-    setRecommendation(recommendedRoom);
-  }, []);
-  const [error, setError] = useState<string | null>(null);
 
-  const Name = recommendation.roomName;
-  const Type = Converter.convertRoomType(roomType);
-  const Date = Converter.formatDate(startTime);
-  const Time = Converter.formatFromTimeToTime(startTime, endTime);
-  const Size = Converter.convertRoomSize(roomSize);
+  const navigation = useNavigation();
+
+  const query = trpc.room.nextAvailable.useQuery({
+    type: roomType as RoomType,
+    capacity: parseInt(roomSize),
+    startTime: startTime,
+    endTime: endTime,
+  });
 
   const mutation = trpc.booking.create.useMutation({
     onSuccess() {
       utils.booking.invalidate();
     },
-    onError(err) {
-      setError(err.message);
-    },
   });
 
   const createBooking = async () => {
     await mutation.mutateAsync({
-      userId: 1,
-      startTime: startTime as string,
-      endTime: endTime as string,
-      roomId: recommendation.roomId,
+      userId: userId!,
+      startTime: startTime,
+      endTime: endTime,
+      roomId: query.data!.id,
       status: "UPCOMING",
     });
   };
 
-  const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Confirm booking",
@@ -92,23 +70,23 @@ export default function Confirmation() {
         <Header>Booking details</Header>
         <InfoItem>
           <MapPin />
-          <Text>{Name}</Text>
+          <Text>{query.data?.name}</Text>
         </InfoItem>
         <InfoItem>
           <LampDesk />
-          <Text>{Type}</Text>
+          <Text>{Converter.convertRoomType(roomType)}</Text>
         </InfoItem>
         <InfoItem>
           <Calendar />
-          <Text>{Date}</Text>
+          <Text>{Converter.formatDate(startTime)}</Text>
         </InfoItem>
         <InfoItem>
           <Clock />
-          <Text>{Time}</Text>
+          <Text>{Converter.formatFromTimeToTime(startTime, endTime)}</Text>
         </InfoItem>
         <InfoItem>
           <Users />
-          <Text>{Size}</Text>
+          <Text>{roomSize}</Text>
         </InfoItem>
       </InfoContainer>
       <AlertDialog>
@@ -156,7 +134,6 @@ export default function Confirmation() {
           </AlertDialog.Content>
         </AlertDialog.Portal>
       </AlertDialog>
-      {error && <Text>Error: {error}</Text>}
     </MainContainer>
   );
 }

@@ -1,5 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { History, Home, LogIn, SquarePen, User } from "@tamagui/lucide-icons";
+import { History, Home, KeyRound, User } from "@tamagui/lucide-icons";
 import { Tabs } from "expo-router";
 import React from "react";
 
@@ -40,19 +40,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="signup"
-        options={{
-          title: "Sign up",
-          tabBarIcon: ({ color }) => <SquarePen color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="login"
         options={{
-          title: "Login",
-          tabBarIcon: ({ color }) => <LogIn color={color} />,
+          title: "Log in",
+          tabBarIcon: ({ color }) => <KeyRound color={color} />,
         }}
-      />
+      ></Tabs.Screen>
     </Tabs>
   );
 }

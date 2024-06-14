@@ -1,8 +1,11 @@
 import { router } from "expo-router";
-import { Button, View, XStack, Text } from "tamagui";
+import { Button, View, XStack, Text, styled } from "tamagui";
+import { Info, Users } from "@tamagui/lucide-icons";
+
 interface SelectionItem {
   text: string;
   href: { pathname: string; params: Record<string, string> };
+  icon?: string;
 }
 
 interface NavigationSelectionProps {
@@ -22,10 +25,21 @@ export default function NavigationSelection({
             margin={3}
             borderRadius={"$4"}
           >
-            <Text textAlign="center">{option.text}</Text>
+            <InfoItem>
+              {option.icon === "users" && <Users />}
+              <Text textAlign="center">{option.text}</Text>
+            </InfoItem>
           </Button>
         </View>
       ))}
     </XStack>
   );
 }
+
+const InfoItem = styled(View, {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  marginBottom: "$2",
+  gap: "$2",
+});

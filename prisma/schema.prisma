@@ -11,6 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  relationMode="prisma"
 }
 
 enum BookingStatus {
@@ -30,6 +31,8 @@ model User {
   id        Int       @id @default(autoincrement())
   email     String    @unique
   name      String?
+  password  String
+  surname   String?
   bookings  Booking[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

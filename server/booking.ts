@@ -19,6 +19,7 @@ export const bookingRouter = router({
 
       // Check if the booking time is in the past
       const currentTime = new Date();
+      currentTime.setSeconds(0, 0);
       if (new Date(input.startTime) < currentTime) {
         throw new Error("Cannot make a booking in the past.");
       }
@@ -120,6 +121,10 @@ export const bookingRouter = router({
       return await prisma.booking.findFirst({
         where: {
           userId: userId,
+        },
+        include: {
+          user: true,
+          room: true,
         },
         orderBy: {
           startTime: "desc",
