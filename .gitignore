@@ -46,3 +46,4 @@ expo-env.d.ts
 
 #vscode config
 .vscode/
+.vscode

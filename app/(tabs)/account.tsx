@@ -3,33 +3,34 @@ import { router } from "expo-router";
 import { useContext } from "react";
 import { AuthContext } from "../_layout";
 import { Text, Button, View, Separator, styled } from "tamagui";
-import { Settings, Info } from "@tamagui/lucide-icons";
+import { Settings, Info, KeyRound } from "@tamagui/lucide-icons";
 
 export default function AccountScreen() {
   const { userId } = useContext(AuthContext);
   const user = trpc.user.get.useQuery(userId!);
 
+  const debug = false;
+
   return (
     <StyledContainer>
       {user.data && (
         <View>
-          <StyledTitle>{user.data.name}</StyledTitle>
+          <StyledTitle>
+            {user.data.name} {user.data.surname}
+          </StyledTitle>
+          <Text>{user.data.email}</Text>
+          {debug && <Text color={"red"}>{user.data.id}</Text>}
         </View>
       )}
       <StyledSeparator />
       <View gap={"$3"}>
         <Button
           onPress={() => {
-            router.push("./LoginScreen");
+            router.push("/login");
           }}
         >
-          Log In
-        </Button>
-        <Button>
-          <Settings></Settings>Settings
-        </Button>
-        <Button>
-          <Info></Info>About the app
+          <KeyRound />
+          Sign out
         </Button>
       </View>
     </StyledContainer>

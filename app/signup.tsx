@@ -1,6 +1,6 @@
 import { trpc } from "@/utils/trpc";
-import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { router, useNavigation } from "expo-router";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "tamagui";
 export default function LoginScreen() {
@@ -16,6 +16,14 @@ export default function LoginScreen() {
     setPassword(text);
   };
 
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Sign up",
+    });
+  }, [navigation]);
+
   const handleConfirmPasswordChange = (_password: string) => {
     setConfirmPassword(_password);
   };
@@ -24,7 +32,7 @@ export default function LoginScreen() {
     Password: string,
     Name: string,
     Email: string,
-    Surname: string
+    Surname: string,
   ) => {
     try {
       await mutation.mutateAsync({
@@ -45,7 +53,10 @@ export default function LoginScreen() {
   useEffect(() => {
     setIsMatch(password === confirmPassword);
     setIsFormValid(
-      password !== "" && name !== "" && surname !== "" && confirmPassword !== ""
+      password !== "" &&
+        name !== "" &&
+        surname !== "" &&
+        confirmPassword !== "",
     );
   }, [password, name, surname, confirmPassword]);
 

@@ -1,13 +1,13 @@
 import { trpc } from "@/utils/trpc";
 import { MapPicture } from "./map";
 import MapController from "./MapController";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import {
   getCorrespondingStair,
   navigationIdToCoords,
 } from "./navigationIdToCoords";
 import { View, Text, styled } from "tamagui";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import DrawLine from "./DrawLine";
 import { dijkstra } from "./pathfinding";
 
@@ -33,6 +33,15 @@ export default function Navigation() {
   }
 
   const debug = false; // toggle labels
+
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Navigate to room",
+      headerBackTitle: "Home",
+    });
+  }, [navigation]);
 
   return (
     <View position="relative" height={"100%"} backgroundColor={"#D9D9D9"}>

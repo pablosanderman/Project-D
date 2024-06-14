@@ -39,13 +39,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <User color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="login"
-        options={{
-          title: "Log in",
-          tabBarIcon: ({ color }) => <KeyRound color={color} />,
-        }}
-      ></Tabs.Screen>
     </Tabs>
   );
 }

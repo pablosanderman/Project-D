@@ -11,14 +11,14 @@ import { SplashScreen, Stack } from "expo-router";
 
 import { useColorScheme } from "react-native";
 
-import { useFonts } from "expo-font";
+import { loadAsync, useFonts } from "expo-font";
 import { createContext, useEffect, useState } from "react";
 import { TamaguiProvider } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";
 
 export const AuthContext = createContext({
-  userId: null,
-  setUserId: (foo: number) => {},
+  userId: 1,
+  setUserId: (_: number) => {},
 });
 
 export default function RootLayout() {
@@ -33,30 +33,29 @@ export default function RootLayout() {
 
   const colorScheme = useColorScheme();
 
-  const [userId, setUserId] = useState<number | null>(1);
-  const value = { userId, setUserId };
+  const [userId, setUserId] = useState(1);
+  const authContextValue = { userId, setUserId };
 
-  const [loaded] = useFonts({
-    Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
-    InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
-  });
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    async function loadFonts() {
+      await loadAsync({
+        Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
+        InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
+      });
+      setFontsLoaded(true);
     }
-  }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+    loadFonts();
+  }, []);
 
   return (
     <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
-            <AuthContext.Provider value={value}>
+            <AuthContext.Provider value={authContextValue}>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack>
