@@ -22,11 +22,11 @@ async function createData() {
     });
   }
 
-  for (const booking of seedingData.bookings) {
-    await prisma.booking.create({
-      data: booking,
-    });
-  }
+  // for (const booking of seedingData.bookings) {
+  //   await prisma.booking.create({
+  //     data: booking,
+  //   });
+  // }
 }
 
 // NOTE: you can only run one function at a time, or else the async functions will run concurrently.

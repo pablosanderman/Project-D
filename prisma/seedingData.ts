@@ -48,29 +48,29 @@
 
 import { BookingStatus, RoomType } from "@prisma/client";
 
-const bookings = [
-  {
-    userId: 1,
-    startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    roomId: 1,
-    status: BookingStatus.UPCOMING,
-  },
-  {
-    userId: 2,
-    startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    roomId: 2,
-    status: BookingStatus.CANCELLED,
-  },
-  {
-    userId: 3,
-    startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    roomId: 3,
-    status: BookingStatus.CONFIRMED,
-  },
-];
+// const bookings = [
+//   {
+//     userId: 1,
+//     startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+//     endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+//     roomId: 1,
+//     status: BookingStatus.UPCOMING,
+//   },
+//   {
+//     userId: 2,
+//     startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+//     endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+//     roomId: 2,
+//     status: BookingStatus.CANCELLED,
+//   },
+//   {
+//     userId: 3,
+//     startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+//     endTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+//     roomId: 3,
+//     status: BookingStatus.CONFIRMED,
+//   },
+// ];
 
 const users = [
   {
@@ -208,7 +208,7 @@ function createDeskCluster(floor: number, count: number, navigationId: string) {
 }
 
 export const seedingData = {
-  bookings,
+  // bookings,
   users,
   rooms,
 };

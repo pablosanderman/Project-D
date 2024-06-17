@@ -5,24 +5,32 @@ import { Converter } from "@/utils/converter";
 import { prettyRoomType } from "@/utils/prettyRoomType";
 import { router } from "expo-router";
 import { trpc } from "@/utils/trpc";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const { userId } = useContext(AuthContext);
   const utils = trpc.useUtils();
 
-  const { data: booking } = trpc.booking.getMostRecentBooking.useQuery(
+  const { data: booking, refetch } = trpc.booking.getMostRecentBooking.useQuery(
     {
       userId: userId,
     },
-    { refetchOnMount: true },
+    { refetchOnMount: true }
   );
 
   useEffect(() => {
     utils.booking.invalidate();
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+      return () => {};
+    }, [refetch])
+  );
 
   return (
     <View rowGap="$2" mt="$4" mx="$2">
