@@ -1,13 +1,13 @@
 # Project D
-This is a prototype for a workspace booking application we made for Peter van der Lee from [Eneco](http://eneco.nl), as a project for the "Project D" class at @hogeschool.
+This is a prototype for a workspace booking application we made for Peter van der Lee from [Eneco](http://eneco.nl), as a project for the "Project D" class at the [Hogeschool Rotterdam](https://github.com/hogeschool).
 
 ## Who made this:
-- @korbindeman
-- @pablosanderman
-- @schtormm
-- @ByteSizeSkaffy
+- [@korbindeman](https://github.com/korbindeman) 
+- [@pablosanderman](https://github.com/pablosanderman)
+- [@schtormm](https://github.com/schtormm)
+- [@ByteSizeSkaffy](https://github.com/ByteSizeSkaffy)
 
-(and also @JimHeukels)
+(and also [@JimHeukels](https://github.com/JimHeukels))
 
 # How do I use this?
 1. Clone the repository
