@@ -1,10 +1,11 @@
+import Button from "@/components/Button";
+import Card from "@/components/Card";
+import { Converter } from "@/utils/converter";
 import { trpc } from "@/utils/trpc";
 import { useContext, useState } from "react";
+import { FlatList } from "react-native";
 import { Text, View, XStack, YStack } from "tamagui";
 import { AuthContext } from "../_layout";
-import { Converter } from "@/utils/converter";
-import Card from "@/components/Card";
-import Button from "@/components/Button";
 
 export default function ActivityScreen() {
   const { userId } = useContext(AuthContext);
@@ -52,12 +53,12 @@ export default function ActivityScreen() {
       </View>
       <View mt="$10">
         <YStack width={"100%"} gap="$2">
-          {query.data
-            ?.filter(
+          <FlatList
+            data={query.data?.filter(
               (booking) =>
-                booking.status === statusFilter || statusFilter === "ALL",
-            )
-            .map((booking) => (
+                booking.status === statusFilter || statusFilter === "ALL"
+            )}
+            renderItem={({ item: booking }) => (
               <Card borderRadius={"$4"} key={booking.id}>
                 <Text>Room {booking.room.name}</Text>
                 <Text>
@@ -65,7 +66,7 @@ export default function ActivityScreen() {
                   <Text fontWeight={"bold"}>
                     {Converter.formatFromTimeToTime(
                       booking.startTime,
-                      booking.endTime,
+                      booking.endTime
                     )}
                   </Text>{" "}
                   on{" "}
@@ -83,7 +84,8 @@ export default function ActivityScreen() {
                     : booking.user.name + " " + booking.user.surname}
                 </Text>
               </Card>
-            ))}
+            )}
+          ></FlatList>
         </YStack>
       </View>
 
