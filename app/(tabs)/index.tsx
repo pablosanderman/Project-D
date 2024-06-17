@@ -11,15 +11,17 @@ import Card from "@/components/Card";
 export default function HomeScreen() {
   const { userId } = useContext(AuthContext);
 
-  const query = trpc.booking.get.useQuery({
-    userId: userId,
-    filter: { status: "UPCOMING" }
-    
-  }, {refetchOnMount: true});
+  const query = trpc.booking.get.useQuery(
+    {
+      userId: userId,
+      filter: { status: "UPCOMING" },
+    },
+    { refetchOnMount: true },
+  );
 
   return (
     <View rowGap="$2" mt="$4" mx="$2">
-      {query.data?.map((booking) => (
+      {query.data?.slice(0, 1).map((booking) => (
         <Card height={"$12"} key={booking.id}>
           <Text marginBottom={"$1"}>
             <Text fontWeight={"bold"}>{prettyRoomType(booking.room.type)}</Text>{" "}
