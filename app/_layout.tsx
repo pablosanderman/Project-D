@@ -17,7 +17,7 @@ import { TamaguiProvider } from "tamagui";
 import { tamaguiConfig } from "../tamagui.config";
 
 export const AuthContext = createContext({
-  userId: 1,
+  userId: 4,
   setUserId: (_: number) => {},
 });
 
@@ -33,7 +33,7 @@ export default function RootLayout() {
 
   const colorScheme = useColorScheme();
 
-  const [userId, setUserId] = useState(1);
+  const [userId, setUserId] = useState(4);
   const authContextValue = { userId, setUserId };
 
   const [fontsLoaded, setFontsLoaded] = useState(false);

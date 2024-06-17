@@ -2,8 +2,9 @@ import { trpc } from "@/utils/trpc";
 import { router } from "expo-router";
 import { useContext } from "react";
 import { AuthContext } from "../_layout";
-import { Text, Button, View, Separator, styled } from "tamagui";
+import { Text, View, Separator, styled } from "tamagui";
 import { Settings, Info, KeyRound } from "@tamagui/lucide-icons";
+import Button from "@/components/Button";
 
 export default function AccountScreen() {
   const { userId } = useContext(AuthContext);

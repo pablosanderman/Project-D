@@ -1,9 +1,10 @@
 import { trpc } from "@/utils/trpc";
 import { useContext, useState } from "react";
-import { Button, Text, View, XStack, YStack } from "tamagui";
+import { Text, View, XStack, YStack } from "tamagui";
 import { AuthContext } from "../_layout";
 import { Converter } from "@/utils/converter";
 import Card from "@/components/Card";
+import Button from "@/components/Button";
 
 export default function ActivityScreen() {
   const { userId } = useContext(AuthContext);

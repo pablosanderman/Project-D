@@ -1,9 +1,10 @@
 import { trpc } from "@/utils/trpc";
 import { router, useNavigation } from "expo-router";
 import React, { useLayoutEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Button, Input } from "tamagui";
+import { Input, View, Text, XStack } from "tamagui";
 import { AuthContext } from "./_layout";
+import Card from "@/components/Card";
+import Button from "@/components/Button";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -21,75 +22,37 @@ export default function LoginScreen() {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.popup}>
-        <Text style={styles.text}>Login</Text>
+    <View rowGap="$2" m="$10">
+      <Card rowGap="$2">
+        <Text fontWeight={"bold"} fontSize={20} mb="$2">
+          Log in
+        </Text>
+        <Input placeholder="Email" onChangeText={setEmail} />
         <Input
-          style={styles.fields}
-          placeholder="Email"
-          onChangeText={setEmail}
-        />
-        <Input
-          style={styles.fields}
           secureTextEntry={true}
           placeholder="Password"
           onChangeText={setPassword}
         />
-      </View>
+      </Card>
 
-      <View style={styles.buttons}>
+      <XStack flex={1} justifyContent="space-between">
         <Button
+          width={"49%"}
           onPress={() => {
             router.push("/signup");
           }}
-          backgroundColor={"darkgray"}
         >
-          {" "}
           Sign up
         </Button>
         <Button
+          width={"49%"}
           onPress={() => {
             setUserId(query.data!.id);
           }}
-          backgroundColor={"darkgray"}
         >
-          {" "}
           Log in
         </Button>
-      </View>
+      </XStack>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#ecf0f1",
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: 200,
-    marginTop: 10,
-  },
-  popup: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    width: 200,
-    height: 155,
-  },
-  text: {
-    fontSize: 20,
-    marginLeft: 10,
-    marginTop: 10,
-    fontWeight: "bold",
-  },
-  fields: {
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 10,
-    paddingBottom: 10,
-  },
-});
